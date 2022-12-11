@@ -17,6 +17,7 @@
 
 TaskHandle_t Game = NULL;
 TaskHandle_t DemoTask2 = NULL; //test
+TaskHandle_t SinglePlayer = NULL;
 
 
 void vTaskGame(void *pvParameters)
@@ -35,6 +36,7 @@ void vTaskGame(void *pvParameters)
 
 		vDrawBase();
 		vDrawmenu();
+		vDrawQuit();
 		vDrawSpriteAnimations(xLastFrameTime);
 		xLastFrameTime = xTaskGetTickCount();
 		
@@ -54,11 +56,30 @@ void vDemoTask2(void *pvParameters)
 		tumDrawBindThread();
 		vDrawBackground();
 		vDrawSubmenu();
+		vDrawQuit();
 		tumDrawUpdateScreen();
 		vCheckStateInput();
 
 	}
 }
+
+// void vTaskSingle(void *pvParameters)
+// {
+// 	while (1) {
+// 		tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
+// 				    FETCH_EVENT_NO_GL_CHECK);		
+// 		xGetButtonInput();
+// 		tumDrawBindThread();
+// 		vDrawBackground();
+// 		vDrawStop();
+// 		vDrawQuit();
+
+// 		tumDrawUpdateScreen();
+// 		vCheckStateInput();
+
+// 	}
+	
+// }
 
 int createTasks(void)
 {
@@ -66,9 +87,12 @@ int createTasks(void)
 		    mainGENERIC_PRIORITY + 1, &Game);
 	xTaskCreate(vDemoTask2, "DemoTask2", mainGENERIC_STACK_SIZE * 2, NULL,
 		    mainGENERIC_PRIORITY + 1, &DemoTask2);
+	// xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 2, NULL,
+	// 	    mainGENERIC_PRIORITY + 1, &SinglePlayer);
 
 	vTaskSuspend(Game);
 	vTaskSuspend(DemoTask2);
+	// vTaskSuspend(SinglePlayer);
 
 	return 0;
 }

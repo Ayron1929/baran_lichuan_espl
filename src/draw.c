@@ -41,26 +41,57 @@ void checkDraw(unsigned char status, const char *msg)
 void vDrawmenu(void)
 {
 
-	static char str[100] = { 0 };
-    static int text_width;
+
 	char *menu = "Menu";
-
-
-    ssize_t prev_font_size = tumFontGetCurFontSize();
 
 
     tumFontSetSize((ssize_t)30);
 
-    sprintf(str, "[Q]uit");
+
+
+	checkDraw(tumDrawText(menu, 260, 925, Maroon), __FUNCTION__);
+
+
+
+}
+
+void vDrawQuit(void)
+{
+	static char str[100] = { 0 };
+    static int text_width;
+
+	ssize_t prev_font_size = tumFontGetCurFontSize();
+
+
+    tumFontSetSize((ssize_t)30);
+	sprintf(str, "[Q]uit");
 
     if (!tumGetTextSize((char *)str, &text_width, NULL))
         checkDraw(tumDrawText(str, SCREEN_WIDTH - text_width - 10,
                               DEFAULT_FONT_SIZE * 0.5, Black),
                   __FUNCTION__);
 
-	checkDraw(tumDrawText(menu, 260, 925, Maroon), __FUNCTION__);
-    tumFontSetSize(prev_font_size);
+	tumFontSetSize(prev_font_size);
 
+}
+
+void vDrawStop(void)
+{
+	static char stop[100] = { 0 };
+    static int stop_width;
+
+	ssize_t prev_font_size = tumFontGetCurFontSize();
+
+
+    tumFontSetSize((ssize_t)30);
+	sprintf(stop, "[P]ause");
+
+    if (!tumGetTextSize((char *)stop, &stop_width, NULL))
+        checkDraw(tumDrawText(stop, SCREEN_WIDTH - stop_width - 100,
+                              DEFAULT_FONT_SIZE * 0.5, Black),
+                  __FUNCTION__);
+
+	tumFontSetSize(prev_font_size);
 
 }
 
@@ -73,7 +104,11 @@ void vDrawSubmenu(void)
 	char *back = "Back";
 
 	tumFontSetSize((ssize_t)30);
-	checkDraw(tumDrawText(single, 200, DEFAULT_FONT_SIZE * 5, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(single, 200, DEFAULT_FONT_SIZE * 5 + 150, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(multi, 200, DEFAULT_FONT_SIZE * 10 + 150, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(cheats, 200, DEFAULT_FONT_SIZE * 15 + 150, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(high_score, 200, DEFAULT_FONT_SIZE * 20 + 150, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(back, 200 + 50, DEFAULT_FONT_SIZE * 25 + 150, Maroon), __FUNCTION__);
 
 }
 
