@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "tum_event.h": "c",
+        "sdl_scancode.h": "c",
+        "emulatorconfig.h": "c",
+        "tum_print.h": "c",
+        "demo_tasks.h": "c",
+        "state_machine.h": "c"
+    }
+}

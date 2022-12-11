@@ -13,6 +13,7 @@
 #include "async_sockets.h"
 #include "buttons.h"
 #include "state_machine.h"
+// #include "menu.h"
 
 #define BACKGROUND_FILENAME "background-day.png"
 #define BASE_FILENAME "base.png"
@@ -35,6 +36,45 @@ void checkDraw(unsigned char status, const char *msg)
 			fprints(stderr, "[ERROR] %s\n", tumGetErrorMessage());
 		}
 	}
+}
+
+void vDrawmenu(void)
+{
+
+	static char str[100] = { 0 };
+    static int text_width;
+	char *menu = "Menu";
+
+
+    ssize_t prev_font_size = tumFontGetCurFontSize();
+
+
+    tumFontSetSize((ssize_t)30);
+
+    sprintf(str, "[Q]uit");
+
+    if (!tumGetTextSize((char *)str, &text_width, NULL))
+        checkDraw(tumDrawText(str, SCREEN_WIDTH - text_width - 10,
+                              DEFAULT_FONT_SIZE * 0.5, Black),
+                  __FUNCTION__);
+
+	checkDraw(tumDrawText(menu, 260, 925, Maroon), __FUNCTION__);
+    tumFontSetSize(prev_font_size);
+
+
+}
+
+void vDrawSubmenu(void)
+{
+	char *single = "Single Player";
+	char *multi = "Two Player";
+	char *cheats = "Cheat Mode";
+	char *high_score = "View Scores";
+	char *back = "Back";
+
+	tumFontSetSize((ssize_t)30);
+	checkDraw(tumDrawText(single, 200, DEFAULT_FONT_SIZE * 5, Maroon), __FUNCTION__);
+
 }
 
 void vDrawBackground(void)

@@ -32,6 +32,7 @@ const unsigned char next_state_signal = NEXT_TASK;
 const unsigned char prev_state_signal = PREV_TASK;
 
 static TaskHandle_t StateMachine = NULL;
+SemaphoreHandle_t DrawSignal = NULL;
 
 
 int main(int argc, char *argv[])

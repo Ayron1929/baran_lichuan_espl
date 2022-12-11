@@ -8,10 +8,11 @@
 #define STATE_DEBOUNCE_DELAY 300
 #define STATE_QUEUE_LENGTH 1
 
-#define STATE_COUNT 2
+#define STATE_COUNT 3
 
 #define STATE_ONE 0
 #define STATE_TWO 1
+#define STATE_THREE 2
 
 #define NEXT_TASK 0
 #define PREV_TASK 1
