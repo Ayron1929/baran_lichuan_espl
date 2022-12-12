@@ -26,6 +26,11 @@ spritesheet_handle_t bird_spritesheet = NULL;
 sequence_handle_t forward_sequence = NULL;
 sequence_handle_t reverse_sequence = NULL;
 
+int menu_width;
+int menu_height;
+int mouse_x, mouse_y;
+
+
 void checkDraw(unsigned char status, const char *msg)
 {
 	if (status) {
@@ -40,18 +45,36 @@ void checkDraw(unsigned char status, const char *msg)
 
 void vDrawmenu(void)
 {
+	static char menu[100] = { 0 };
 
 
-	char *menu = "Menu";
+	ssize_t prev_font_size = tumFontGetCurFontSize();
 
 
     tumFontSetSize((ssize_t)30);
+	sprintf(menu, "Click Menu");
+	tumGetTextSize(menu, &menu_width, &menu_height);
 
+    if (!tumGetTextSize((char *)menu, &menu_width, NULL))
+        checkDraw(tumDrawText(menu, SCREEN_WIDTH * 0.5- menu_width * 0.5,
+                              SCREEN_HEIGHT * 0.77, Maroon),
+                  __FUNCTION__);
 
+	tumFontSetSize(prev_font_size);
+}
 
-	checkDraw(tumDrawText(menu, 260, 925, Maroon), __FUNCTION__);
+void vCheckMouse(void)
+{
+	int menu_left = SCREEN_WIDTH / 2 - menu_width / 2;
+	int menu_right = SCREEN_WIDTH / 2 + menu_width / 2;
+	int menu_up = SCREEN_HEIGHT * 0.77;
+	int menu_down = SCREEN_HEIGHT * 0.77 + menu_height / 2;
+	int check;
 
+    mouse_x = tumEventGetMouseX();
+    mouse_y = tumEventGetMouseY();
 
+	if((mouse_x >= menu_left) && (mouse_x <= menu_right) && (mouse_y >= menu_up) && (mouse_y <= menu_down)) return check = 1;
 
 }
 
@@ -102,13 +125,21 @@ void vDrawSubmenu(void)
 	char *cheats = "Cheat Mode";
 	char *high_score = "View Scores";
 	char *back = "Back";
-
 	tumFontSetSize((ssize_t)30);
-	checkDraw(tumDrawText(single, 200, DEFAULT_FONT_SIZE * 5 + 150, Maroon), __FUNCTION__);
-	checkDraw(tumDrawText(multi, 200, DEFAULT_FONT_SIZE * 10 + 150, Maroon), __FUNCTION__);
-	checkDraw(tumDrawText(cheats, 200, DEFAULT_FONT_SIZE * 15 + 150, Maroon), __FUNCTION__);
-	checkDraw(tumDrawText(high_score, 200, DEFAULT_FONT_SIZE * 20 + 150, Maroon), __FUNCTION__);
-	checkDraw(tumDrawText(back, 200 + 50, DEFAULT_FONT_SIZE * 25 + 150, Maroon), __FUNCTION__);
+	int single_width, multi_width, cheats_width, high_score_width, back_width;
+	int screen_mid = SCREEN_WIDTH / 2;
+	tumGetTextSize(single, &single_width, NULL);
+	tumGetTextSize(multi, &multi_width, NULL);	
+	tumGetTextSize(cheats, &cheats_width, NULL);
+	tumGetTextSize(high_score, &high_score_width, NULL);
+	tumGetTextSize(back, &back_width, NULL);
+
+
+	checkDraw(tumDrawText(single, screen_mid - single_width / 2, DEFAULT_FONT_SIZE * 5 + 150, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(multi, screen_mid - multi_width / 2, DEFAULT_FONT_SIZE * 10 + 150, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(cheats, screen_mid - cheats_width / 2, DEFAULT_FONT_SIZE * 15 + 150, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(high_score, screen_mid - high_score_width / 2, DEFAULT_FONT_SIZE * 20 + 150, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(back, screen_mid - back_width / 2, DEFAULT_FONT_SIZE * 25 + 150, Maroon), __FUNCTION__);
 
 }
 
@@ -123,7 +154,7 @@ void vDrawBackground(void)
 
 	if ((image_height = tumDrawGetLoadedImageHeight(background_image)) !=
 	    -1)
-		checkDraw(tumDrawLoadedImage(background_image, 0, 0),
+		checkDraw(tumDrawLoadedImage(background_image, 0, -0.25 * SCREEN_WIDTH),
 			  __FUNCTION__);
 	else {
 		fprints(stderr,
@@ -149,7 +180,7 @@ void vDrawBase(void)
 
 	if ((image_height = tumDrawGetLoadedImageHeight(base_image)) != -1) {
 		checkDraw(tumDrawLoadedImage(base_image, 0 - imgOutOfScreen - 1,
-					     SCREEN_HEIGHT - 190),
+					     SCREEN_HEIGHT * 0.7),
 			  __FUNCTION__);
 		imgOutOfScreen += 5;
 		if (imgOutOfScreen >= tumDrawGetLoadedImageWidth(base_image)) {
@@ -166,7 +197,7 @@ void vDrawBase(void)
 	if ((image_height = tumDrawGetLoadedImageHeight(base_image2)) != -1)
 		checkDraw(tumDrawLoadedImage(base_image2,
 					     SCREEN_WIDTH - imgOutOfScreen,
-					     SCREEN_HEIGHT - 190),
+					     SCREEN_HEIGHT * 0.7),
 			  __FUNCTION__);
 
 	else {

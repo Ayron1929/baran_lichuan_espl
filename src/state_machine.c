@@ -11,7 +11,7 @@
 #include "TUM_Draw.h"
 
 QueueHandle_t StateQueue = NULL;
-int mouse_x, mouse_y;
+
 
 
 
@@ -19,15 +19,8 @@ int mouse_x, mouse_y;
 
 int vCheckStateInput(void)
 {
-
-    mouse_x = tumEventGetMouseX();
-    mouse_y = tumEventGetMouseY();
-    char *menu = "Menu";
-	static int menu_width;
-	static int menu_height;
-    tumGetTextSize(menu, &menu_width, &menu_height);
     if (xSemaphoreTake(buttons.lock, 0) == pdTRUE) {
-        if (tumEventGetMouseLeft() && (260 <= mouse_x) && (mouse_x <= 340) && (925 <= mouse_y) && (mouse_y <= 950)) {
+        if (tumEventGetMouseLeft() && vCheckMouse()) {
             
             if (StateQueue) {
                 xSemaphoreGive(buttons.lock);
