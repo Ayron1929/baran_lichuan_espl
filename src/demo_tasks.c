@@ -12,12 +12,12 @@
 #include "async_message_queues.h"
 #include "async_sockets.h"
 #include "buttons.h"
-#include "state_machine.h"
+#include"sm.h"
 
 
 TaskHandle_t Game = NULL;
-TaskHandle_t DemoTask2 = NULL; //test
-TaskHandle_t SinglePlayer = NULL;
+TaskHandle_t DemoTask2 = NULL;
+// TaskHandle_t SinglePlayer = NULL;
 
 
 void vTaskGame(void *pvParameters)
@@ -41,7 +41,7 @@ void vTaskGame(void *pvParameters)
 		xLastFrameTime = xTaskGetTickCount();
 		
 		tumDrawUpdateScreen();
-		vCheckStateInput();
+		// vCheckMenuMouse();
 		
 		vTaskDelay(20);
 	}
@@ -58,7 +58,7 @@ void vDemoTask2(void *pvParameters)
 		vDrawSubmenu();
 		vDrawQuit();
 		tumDrawUpdateScreen();
-		vCheckStateInput();
+
 
 	}
 }

@@ -23,17 +23,34 @@
 
 #include "demo_tasks.h"
 #include "buttons.h"
-#include "state_machine.h"
+
 #include "defines.h"
 
 #include "AsyncIO.h"
+#include "sm.h"
 
-const unsigned char next_state_signal = NEXT_TASK;
-const unsigned char prev_state_signal = PREV_TASK;
+#include "game_menu.h"
 
-static TaskHandle_t StateMachine = NULL;
-SemaphoreHandle_t DrawSignal = NULL;
 
+// const unsigned char next_state_signal = NEXT_TASK;
+// const unsigned char prev_state_signal = PREV_TASK;
+
+// static TaskHandle_t StateMachine = NULL;
+// SemaphoreHandle_t DrawSignal = NULL;
+static TaskHandle_t GameMenuHandle = NULL;
+
+// void vCheckMenuMouse(void)
+// {
+//     if (xSemaphoreTake(buttons.lock, 0) == pdTRUE) {    
+//         if (1)
+//         {
+//             states_set_state(1);
+//             states_run();
+//         }
+//         xSemaphoreGive(buttons.lock);
+
+//     }
+// }
 
 int main(int argc, char *argv[])
 {
@@ -41,39 +58,69 @@ int main(int argc, char *argv[])
 
     printf("Initializing: ");
 
-    if (tumDrawInit(bin_folder_path)) {
+    if (tumDrawInit(bin_folder_path))
+    {
         PRINT_ERROR("Failed to initialize drawing");
         goto err_init_drawing;
     }
 
-    if (tumEventInit()) {
+    if (tumEventInit())
+    {
         PRINT_ERROR("Failed to initialize events");
         goto err_init_events;
     }
 
-    if (tumSoundInit(bin_folder_path)) {
+    if (tumSoundInit(bin_folder_path))
+    {
         PRINT_ERROR("Failed to initialize audio");
         goto err_init_audio;
     }
 
-    if (buttonsInit()) {
+    if (buttonsInit())
+    {
         PRINT_ERROR("Failed to create buttons lock");
         goto err_buttons_lock;
     }
-    
 
-    StateQueue = xQueueCreate(STATE_QUEUE_LENGTH, sizeof(unsigned char));
-    xTaskCreate(basicSequentialStateMachine, "State Machine", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &StateMachine);
-    
-    if (createTasks()) {
+    // StateQueue = xQueueCreate(STATE_QUEUE_LENGTH, sizeof(unsigned char));
+    // xTaskCreate(basicSequentialStateMachine, "State Machine", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &StateMachine);
+
+    xTaskCreate(GameMenu, "Game Menu", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &GameMenuHandle);
+
+    if (createTasks())
+    {
         PRINT_ERROR("Failed to create tasks");
         goto err_demotask;
     }
 
+    states_add(NULL, EnterStartMenu, RunStartMenu, ExitStartMenu, 0, "START_MENU");
+    states_add(NULL, EnterSettingMenu, RunSettingMenu, NULL, 1, "SETTING_MENU");
+
+    states_init();
+    states_run();
+
+    // if (tumEventGetMouseLeft())
+    // {
+    //     states_set_state(1);
+    //     states_run();
+    // }
     
+
+
+    
+
+
+
+    
+    
+
+
+
+
+
     vTaskStartScheduler();
     tumFUtilPrintTaskStateList();
-    
+
     return EXIT_SUCCESS;
 
 err_demotask:

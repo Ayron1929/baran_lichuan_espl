@@ -5,6 +5,12 @@
         "emulatorconfig.h": "c",
         "tum_print.h": "c",
         "demo_tasks.h": "c",
-        "state_machine.h": "c"
+        "state_machine.h": "c",
+        "string.h": "c",
+        "stdio.h": "c",
+        "sm.h": "c",
+        "main.h": "c",
+        "buttons.h": "c",
+        "cstdlib": "c"
     }
 }

@@ -12,8 +12,8 @@
 #include "async_message_queues.h"
 #include "async_sockets.h"
 #include "buttons.h"
-#include "state_machine.h"
-// #include "menu.h"
+#include "sm.h"
+
 
 #define BACKGROUND_FILENAME "background-day.png"
 #define BASE_FILENAME "base.png"
@@ -28,7 +28,11 @@ sequence_handle_t reverse_sequence = NULL;
 
 int menu_width;
 int menu_height;
-int mouse_x, mouse_y;
+// int mouse_x, mouse_y;
+// int menu_mouse = 0;
+
+
+
 
 
 void checkDraw(unsigned char status, const char *msg)
@@ -47,12 +51,11 @@ void vDrawmenu(void)
 {
 	static char menu[100] = { 0 };
 
-
 	ssize_t prev_font_size = tumFontGetCurFontSize();
 
 
     tumFontSetSize((ssize_t)30);
-	sprintf(menu, "Click Menu");
+	sprintf(menu, "Menu");
 	tumGetTextSize(menu, &menu_width, &menu_height);
 
     if (!tumGetTextSize((char *)menu, &menu_width, NULL))
@@ -61,21 +64,6 @@ void vDrawmenu(void)
                   __FUNCTION__);
 
 	tumFontSetSize(prev_font_size);
-}
-
-void vCheckMouse(void)
-{
-	int menu_left = SCREEN_WIDTH / 2 - menu_width / 2;
-	int menu_right = SCREEN_WIDTH / 2 + menu_width / 2;
-	int menu_up = SCREEN_HEIGHT * 0.77;
-	int menu_down = SCREEN_HEIGHT * 0.77 + menu_height / 2;
-	int check;
-
-    mouse_x = tumEventGetMouseX();
-    mouse_y = tumEventGetMouseY();
-
-	if((mouse_x >= menu_left) && (mouse_x <= menu_right) && (mouse_y >= menu_up) && (mouse_y <= menu_down)) return check = 1;
-
 }
 
 void vDrawQuit(void)
@@ -121,7 +109,7 @@ void vDrawStop(void)
 void vDrawSubmenu(void)
 {
 	char *single = "Single Player";
-	char *multi = "Two Player";
+	char *multi = "Two Players";
 	char *cheats = "Cheat Mode";
 	char *high_score = "View Scores";
 	char *back = "Back";
@@ -143,6 +131,24 @@ void vDrawSubmenu(void)
 
 }
 
+// void vCheckMouse(void)
+// {
+
+// 	int menu_left = SCREEN_WIDTH / 2 - menu_width / 2;
+// 	int menu_right = SCREEN_WIDTH / 2 + menu_width / 2;
+// 	int menu_up = SCREEN_HEIGHT * 0.77;
+// 	int menu_down = SCREEN_HEIGHT * 0.77 + menu_height / 2;
+
+
+// 	mouse_x = tumEventGetMouseX();
+// 	mouse_y = tumEventGetMouseY();
+
+// 	if((mouse_x >= menu_left) && (mouse_x <= menu_right) && (mouse_y >= menu_up) && (mouse_y <= menu_down)) menu_mouse = 1;
+
+// }
+
+
+
 void vDrawBackground(void)
 {
 	static int image_height;
@@ -150,7 +156,7 @@ void vDrawBackground(void)
 	if (background_image == NULL) {
 		background_image = tumDrawLoadImage(BACKGROUND_FILENAME);
 	}
-	tumDrawSetLoadedImageScale(background_image, 2.0);
+	tumDrawSetLoadedImageScale(background_image, 2);
 
 	if ((image_height = tumDrawGetLoadedImageHeight(background_image)) !=
 	    -1)
