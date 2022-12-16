@@ -19,6 +19,14 @@ TaskHandle_t Game = NULL;
 TaskHandle_t DemoTask2 = NULL;
 // TaskHandle_t SinglePlayer = NULL;
 
+// Task to just pereodically run the state machine
+void vStatesTask(void *pvParameters)
+{
+	while(1){
+		states_run();
+		vTaskDelay(pdMS_TO_TICKS(10));
+	}
+}
 
 void vTaskGame(void *pvParameters)
 {
@@ -33,6 +41,11 @@ void vTaskGame(void *pvParameters)
 				    FETCH_EVENT_NO_GL_CHECK);
 		xGetButtonInput();
 
+
+		if (tumEventGetMouseLeft())
+		{
+			states_set_state(1);
+		}
 
 		vDrawBase();
 		vDrawmenu();
@@ -59,7 +72,7 @@ void vDemoTask2(void *pvParameters)
 		vDrawQuit();
 		tumDrawUpdateScreen();
 
-
+		vTaskDelay(20);
 	}
 }
 

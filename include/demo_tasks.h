@@ -14,5 +14,6 @@ extern TaskHandle_t Game;
 
 int createDemoTasks(void);
 void deleteDemoTasks(void);
+void vStatesTask(void *pvParameters);
 
 #endif // __DEMO_TASKS_H__

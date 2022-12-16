@@ -86,6 +86,8 @@ int main(int argc, char *argv[])
     // xTaskCreate(basicSequentialStateMachine, "State Machine", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &StateMachine);
 
     xTaskCreate(GameMenu, "Game Menu", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &GameMenuHandle);
+    xTaskCreate(vStatesTask, "States", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, NULL);
+
 
     if (createTasks())
     {
@@ -93,8 +95,8 @@ int main(int argc, char *argv[])
         goto err_demotask;
     }
 
-    states_add(NULL, EnterStartMenu, RunStartMenu, ExitStartMenu, 0, "START_MENU");
-    states_add(NULL, EnterSettingMenu, RunSettingMenu, NULL, 1, "SETTING_MENU");
+    states_add(NULL, EnterStartMenu, NULL, ExitStartMenu, 0, "START_MENU");
+    states_add(NULL, EnterSettingMenu, NULL, NULL, 1, "SETTING_MENU");
 
     states_init();
     states_run();
