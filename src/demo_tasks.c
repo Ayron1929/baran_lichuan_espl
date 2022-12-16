@@ -76,23 +76,23 @@ void vDemoTask2(void *pvParameters)
 	}
 }
 
-// void vTaskSingle(void *pvParameters)
-// {
-// 	while (1) {
-// 		tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
-// 				    FETCH_EVENT_NO_GL_CHECK);		
-// 		xGetButtonInput();
-// 		tumDrawBindThread();
-// 		vDrawBackground();
-// 		vDrawStop();
-// 		vDrawQuit();
+void vTaskSingle(void *pvParameters)
+{
+	while (1) {
+		tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
+				    FETCH_EVENT_NO_GL_CHECK);		
+		xGetButtonInput();
+		tumDrawBindThread();
+		vDrawBackground();
+		vDrawStop();
+		vDrawQuit();
 
-// 		tumDrawUpdateScreen();
-// 		vCheckStateInput();
+		tumDrawUpdateScreen();
 
-// 	}
+
+	}
 	
-// }
+}
 
 int createTasks(void)
 {
