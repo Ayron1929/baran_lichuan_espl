@@ -4,13 +4,7 @@
 #include <time.h>
 #include <inttypes.h>
 #include <stdbool.h>
-
 #include <SDL2/SDL_scancode.h>
-
-#include "FreeRTOS.h"
-#include "queue.h"
-#include "semphr.h"
-#include "task.h"
 
 #include "TUM_Ball.h"
 #include "TUM_Draw.h"
@@ -23,34 +17,20 @@
 
 #include "demo_tasks.h"
 #include "buttons.h"
-
 #include "defines.h"
-
 #include "AsyncIO.h"
 #include "sm.h"
-
 #include "game_menu.h"
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
+#include "task.h"
 
 
-// const unsigned char next_state_signal = NEXT_TASK;
-// const unsigned char prev_state_signal = PREV_TASK;
 
-// static TaskHandle_t StateMachine = NULL;
 // SemaphoreHandle_t DrawSignal = NULL;
+
 static TaskHandle_t GameMenuHandle = NULL;
-
-// void vCheckMenuMouse(void)
-// {
-//     if (xSemaphoreTake(buttons.lock, 0) == pdTRUE) {    
-//         if (1)
-//         {
-//             states_set_state(1);
-//             states_run();
-//         }
-//         xSemaphoreGive(buttons.lock);
-
-//     }
-// }
 
 int main(int argc, char *argv[])
 {
@@ -86,6 +66,8 @@ int main(int argc, char *argv[])
     // xTaskCreate(basicSequentialStateMachine, "State Machine", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &StateMachine);
 
     xTaskCreate(GameMenu, "Game Menu", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &GameMenuHandle);
+    xTaskCreate(vStatesTask, "States", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, NULL);
+
 
     if (createTasks())
     {
@@ -93,20 +75,13 @@ int main(int argc, char *argv[])
         goto err_demotask;
     }
 
-    states_add(NULL, EnterStartMenu, RunStartMenu, ExitStartMenu, 0, "START_MENU");
-    states_add(NULL, EnterSettingMenu, RunSettingMenu, NULL, 1, "SETTING_MENU");
+    states_add(NULL, EnterStartMenu, NULL, ExitStartMenu, 0, "START_MENU");
+    states_add(NULL, EnterSettingMenu, NULL, ExitSettingMenu, 1, "SETTING_MENU");
     states_add(NULL, EnterSingleStart, NULL, NULL, 2, "SINGLE_PLAYER");
     
 
     states_init();
-    states_set_state(2);
     states_run();
-
-    // if (tumEventGetMouseLeft())
-    // {
-    //     states_set_state(1);
-    //     states_run();
-    // }
     
 
 

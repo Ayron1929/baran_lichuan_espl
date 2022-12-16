@@ -180,6 +180,7 @@ unsigned int states_get_state_count(void);
  */
 void states_clear_input(void);
 
-void vCheckMenuMouse(void);
+int vCheckMenuMouse(void);
+int vCheckSingle(void);
 
 #endif /* STATES_H_ */

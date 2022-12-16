@@ -30,8 +30,9 @@ sequence_handle_t reverse_sequence = NULL;
 
 int menu_width;
 int menu_height;
-// int mouse_x, mouse_y;
-// int menu_mouse = 0;
+int mouse_x, mouse_y;
+int single_width, single_height, multi_width, cheats_width, high_score_width, back_width;
+int screen_mid = SCREEN_WIDTH / 2;
 
 
 
@@ -116,9 +117,8 @@ void vDrawSubmenu(void)
 	char *high_score = "View Scores";
 	char *back = "Back";
 	tumFontSetSize((ssize_t)30);
-	int single_width, multi_width, cheats_width, high_score_width, back_width;
-	int screen_mid = SCREEN_WIDTH / 2;
-	tumGetTextSize(single, &single_width, NULL);
+
+	tumGetTextSize(single, &single_width, &single_height);
 	tumGetTextSize(multi, &multi_width, NULL);	
 	tumGetTextSize(cheats, &cheats_width, NULL);
 	tumGetTextSize(high_score, &high_score_width, NULL);
@@ -133,21 +133,37 @@ void vDrawSubmenu(void)
 
 }
 
-// void vCheckMouse(void)
-// {
+int vCheckMenuMouse(void)
+{
 
-// 	int menu_left = SCREEN_WIDTH / 2 - menu_width / 2;
-// 	int menu_right = SCREEN_WIDTH / 2 + menu_width / 2;
-// 	int menu_up = SCREEN_HEIGHT * 0.77;
-// 	int menu_down = SCREEN_HEIGHT * 0.77 + menu_height / 2;
+	int menu_left = SCREEN_WIDTH / 2 - menu_width / 2;
+	int menu_right = SCREEN_WIDTH / 2 + menu_width / 2;
+	int menu_up = SCREEN_HEIGHT * 0.77;
+	int menu_down = SCREEN_HEIGHT * 0.77 + menu_height / 2;
 
 
-// 	mouse_x = tumEventGetMouseX();
-// 	mouse_y = tumEventGetMouseY();
+	mouse_x = tumEventGetMouseX();
+	mouse_y = tumEventGetMouseY();
 
-// 	if((mouse_x >= menu_left) && (mouse_x <= menu_right) && (mouse_y >= menu_up) && (mouse_y <= menu_down)) menu_mouse = 1;
+	if((mouse_x >= menu_left) && (mouse_x <= menu_right) && (mouse_y >= menu_up) && (mouse_y <= menu_down)) return 1;
 
-// }
+	return 0;
+}
+
+int vCheckSingle(void)
+{
+	int single_left = screen_mid - single_width / 2;
+	int single_right = screen_mid + single_width / 2;
+	int single_up = DEFAULT_FONT_SIZE * 5 + 150;
+	int single_down = DEFAULT_FONT_SIZE * 5 + 150 + single_height / 2;
+
+	mouse_x = tumEventGetMouseX();
+	mouse_y = tumEventGetMouseY();
+
+	if((mouse_x >= single_left) && (mouse_x <= single_right) && (mouse_y >= single_up) && (mouse_y <= single_down)) return 1;
+
+	return 0;
+}
 
 void vDrawStartSingle(void)
 {

@@ -19,12 +19,7 @@ void EnterStartMenu(void* enter_start_menu)
     vTaskResume(Game);
 
     printf("Enter Start Menu\n");
-}
-
-void RunStartMenu(void *run_start_menu)
-{
     printf("Run Start Menu\n");
-    
 }
 
 void ExitStartMenu(void* exit_start_menu)
@@ -38,16 +33,20 @@ void EnterSettingMenu(void *enter_setting_menu)
     vTaskResume(DemoTask2);
 
     printf("Enter Setting Menu\n");
+    printf("Run Setting Menu\n");
 }
 
-void RunSettingMenu(void* run_setting_menu)
+void ExitSettingMenu(void* exit_setting_menu)
 {
-    printf("Run Setting Menu\n");
+    vTaskSuspend(DemoTask2);
+    printf("Exit Setting Menu\n");
 }
 
 void EnterSingleStart(void *enter_single_start)
 {
     vTaskResume(SinglePlayer);
+    printf("Enter Single Player\n");
+    printf("Run Single Player\n");
 }
 
 

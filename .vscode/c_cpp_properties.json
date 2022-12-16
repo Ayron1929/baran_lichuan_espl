@@ -8,7 +8,7 @@
                 "./lib/FreeRTOS_Kernel/**",
                 "./lib/AsyncIO/**",
                 "./lib/Gfx/**",
-                "./lib/tracer/**",
+                "./lib/tracer/**"
                 // "./include/**"
                 
             ],
