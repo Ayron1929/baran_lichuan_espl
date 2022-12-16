@@ -11,6 +11,7 @@
         "sm.h": "c",
         "main.h": "c",
         "buttons.h": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "game_menu.h": "c"
     }
 }

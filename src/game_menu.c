@@ -45,6 +45,13 @@ void RunSettingMenu(void* run_setting_menu)
     printf("Run Setting Menu\n");
 }
 
+void EnterSingleStart(void *enter_single_start)
+{
+    vTaskResume(SinglePlayer);
+}
+
+
+
 void GameMenu(void* pvParameters)
 {
 

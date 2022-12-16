@@ -17,10 +17,12 @@
 
 #define BACKGROUND_FILENAME "background-day.png"
 #define BASE_FILENAME "base.png"
+#define SINGLE_START_FILENAME "message.png"
 
 image_handle_t background_image = NULL;
 image_handle_t base_image = NULL;
 image_handle_t base_image2 = NULL;
+image_handle_t start_single_image = NULL;
 
 spritesheet_handle_t bird_spritesheet = NULL;
 sequence_handle_t forward_sequence = NULL;
@@ -147,6 +149,13 @@ void vDrawSubmenu(void)
 
 // }
 
+void vDrawStartSingle(void)
+{
+	start_single_image = tumDrawLoadImage(SINGLE_START_FILENAME);
+	tumDrawSetLoadedImageScale(start_single_image, 1.5);
+	checkDraw(tumDrawLoadedImage(start_single_image, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4), __FUNCTION__);
+
+}
 
 
 void vDrawBackground(void)

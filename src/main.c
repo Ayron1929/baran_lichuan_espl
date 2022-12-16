@@ -95,8 +95,11 @@ int main(int argc, char *argv[])
 
     states_add(NULL, EnterStartMenu, RunStartMenu, ExitStartMenu, 0, "START_MENU");
     states_add(NULL, EnterSettingMenu, RunSettingMenu, NULL, 1, "SETTING_MENU");
+    states_add(NULL, EnterSingleStart, NULL, NULL, 2, "SINGLE_PLAYER");
+    
 
     states_init();
+    states_set_state(2);
     states_run();
 
     // if (tumEventGetMouseLeft())
