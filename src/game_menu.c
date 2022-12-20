@@ -59,6 +59,13 @@ void EnterGameOver(void *enter_game_over)
 {
     vTaskResume(GameOver);
     printf("Enter Game Over\n");
+    printf("Run Game Over\n");
+}
+
+void ExitGameOver(void *exit_game_over)
+{
+    vTaskSuspend(GameOver);
+    printf("Exit Game Over\n");
 }
 
 

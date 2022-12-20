@@ -182,5 +182,8 @@ void states_clear_input(void);
 
 int vCheckMenuMouse(void);
 int vCheckSingle(void);
+int vCheckBack(void);
+void vDrawGameOver(void);
+int vCheckReplay(void);
 
 #endif /* STATES_H_ */

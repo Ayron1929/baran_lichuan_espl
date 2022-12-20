@@ -14,6 +14,7 @@ void ExitStartMenu(void* exit_start_menu);
 void ExitSettingMenu(void* exit_setting_menu);
 
 void ExitSingleStart(void *eixt_single_start);
+void ExitGameOver(void *exit_game_over);
 
 
 

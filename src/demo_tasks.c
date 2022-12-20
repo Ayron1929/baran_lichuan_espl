@@ -44,19 +44,19 @@ void vTaskGame(void *pvParameters)
 		xGetButtonInput();
 
 		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
-			if(buttons.buttons[KEYCODE(Q)]) exit(EXIT_SUCCESS);
+
 			if (tumEventGetMouseLeft() && vCheckMenuMouse()) states_set_state(1);
 			xSemaphoreGive(buttons.lock);
 		}
 
 		vDrawBase();
 		vDrawmenu();
-		vDrawQuit();
+
 		vDrawSpriteAnimations(xLastFrameTime);
 		xLastFrameTime = xTaskGetTickCount();
 		
 		tumDrawUpdateScreen();
-		// vCheckMenuMouse();
+
 		
 		vTaskDelay(20);
 	}
@@ -71,11 +71,12 @@ void vDemoTask2(void *pvParameters)
 		tumDrawBindThread();
 		vDrawBackground();
 		vDrawSubmenu();
-		vDrawQuit();
+
 
 		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
-			if(buttons.buttons[KEYCODE(Q)]) exit(EXIT_SUCCESS);
-			if (tumEventGetMouseLeft() && vCheckSingle()) states_set_state(2);
+
+			if (tumEventGetMouseLeft() && vCheckSingle()) states_set_state(3);
+
 			xSemaphoreGive(buttons.lock);
 		}
 
@@ -93,13 +94,12 @@ void vTaskSingle(void *pvParameters)
 		xGetButtonInput();
 		tumDrawBindThread();
 		vDrawBackground();
-		vDrawStop();
-		vDrawQuit();
+
+
 		vDrawStartSingle();
 
-		// if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
-		// 	if(buttons.buttons[KEYCODE(Q)]) exit(EXIT_SUCCESS);
-		// 	if (buttons.buttons[KEYCODE(G)]) states_set_state(3);
+
+		// 	if (tumEventGetMouseLeft() == 1) states_set_state(3);
 		// 	xSemaphoreGive(buttons.lock);
 		// }
 
@@ -119,8 +119,15 @@ void vTaskGameOver(void *pvParameters)
 		tumDrawBindThread();
 		vDrawBackground();
 		
-		vDrawQuit();
+		vDrawGameOver();
 
+		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
+
+			if (tumEventGetMouseLeft() && vCheckReplay()) states_set_state(2);
+			if(tumEventGetMouseLeft() && vCheckBack()) states_set_state(1);
+
+			xSemaphoreGive(buttons.lock);
+		}
 
 		tumDrawUpdateScreen();
 		vTaskDelay(20);

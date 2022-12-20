@@ -18,11 +18,15 @@
 #define BACKGROUND_FILENAME "background-day.png"
 #define BASE_FILENAME "base.png"
 #define SINGLE_START_FILENAME "message.png"
+#define EXIT_FILENAME "Exit.png"
+#define GAME_OVER_FILENAME "gameover.png"
 
 image_handle_t background_image = NULL;
 image_handle_t base_image = NULL;
 image_handle_t base_image2 = NULL;
 image_handle_t start_single_image = NULL;
+image_handle_t quit_image = NULL;
+image_handle_t game_over_image = NULL;
 
 spritesheet_handle_t bird_spritesheet = NULL;
 sequence_handle_t forward_sequence = NULL;
@@ -31,8 +35,10 @@ sequence_handle_t reverse_sequence = NULL;
 int menu_width;
 int menu_height;
 int mouse_x, mouse_y;
-int single_width, single_height, multi_width, cheats_width, high_score_width, back_width;
+int single_width, single_height, multi_width, cheats_width, high_score_width, back_width, back_height;
+int replay_width, replay_height;
 int screen_mid = SCREEN_WIDTH / 2;
+int screen_height_mid = SCREEN_HEIGHT / 2;
 
 
 
@@ -71,41 +77,33 @@ void vDrawmenu(void)
 
 void vDrawQuit(void)
 {
-	static char str[100] = { 0 };
-    static int text_width;
-
-	ssize_t prev_font_size = tumFontGetCurFontSize();
-
-
-    tumFontSetSize((ssize_t)30);
-	sprintf(str, "[Q]uit");
-
-    if (!tumGetTextSize((char *)str, &text_width, NULL))
-        checkDraw(tumDrawText(str, SCREEN_WIDTH - text_width - 10,
-                              DEFAULT_FONT_SIZE * 0.5, Black),
-                  __FUNCTION__);
-
-	tumFontSetSize(prev_font_size);
+	int quit_width, quit_height;
+	quit_image = tumDrawLoadImage(EXIT_FILENAME);
+	tumDrawSetLoadedImageScale(quit_image, 0.2);
+	tumDrawGetLoadedImageSize(quit_image, &quit_width, &quit_height);
+	checkDraw(tumDrawLoadedImage(quit_image, SCREEN_WIDTH - quit_width - 10, 10 + quit_height), __FUNCTION__);
 
 }
 
+
+
 void vDrawStop(void)
 {
-	static char stop[100] = { 0 };
-    static int stop_width;
+	// static char stop[100] = { 0 };
+    // static int stop_width;
 
-	ssize_t prev_font_size = tumFontGetCurFontSize();
+	// ssize_t prev_font_size = tumFontGetCurFontSize();
 
 
-    tumFontSetSize((ssize_t)30);
-	sprintf(stop, "[P]ause");
+    // tumFontSetSize((ssize_t)30);
+	// sprintf(stop, "[P]ause");
 
-    if (!tumGetTextSize((char *)stop, &stop_width, NULL))
-        checkDraw(tumDrawText(stop, SCREEN_WIDTH - stop_width - 100,
-                              DEFAULT_FONT_SIZE * 0.5, Black),
-                  __FUNCTION__);
+    // if (!tumGetTextSize((char *)stop, &stop_width, NULL))
+    //     checkDraw(tumDrawText(stop, SCREEN_WIDTH - stop_width - 100,
+    //                           DEFAULT_FONT_SIZE * 0.5, Black),
+    //               __FUNCTION__);
 
-	tumFontSetSize(prev_font_size);
+	// tumFontSetSize(prev_font_size);
 
 }
 
@@ -115,22 +113,81 @@ void vDrawSubmenu(void)
 	char *multi = "Two Players";
 	char *cheats = "Cheat Mode";
 	char *high_score = "View Scores";
-	char *back = "Back";
+	
 	tumFontSetSize((ssize_t)30);
 
 	tumGetTextSize(single, &single_width, &single_height);
 	tumGetTextSize(multi, &multi_width, NULL);	
 	tumGetTextSize(cheats, &cheats_width, NULL);
 	tumGetTextSize(high_score, &high_score_width, NULL);
-	tumGetTextSize(back, &back_width, NULL);
+	
 
 
 	checkDraw(tumDrawText(single, screen_mid - single_width / 2, DEFAULT_FONT_SIZE * 5 + 150, Maroon), __FUNCTION__);
 	checkDraw(tumDrawText(multi, screen_mid - multi_width / 2, DEFAULT_FONT_SIZE * 10 + 150, Maroon), __FUNCTION__);
 	checkDraw(tumDrawText(cheats, screen_mid - cheats_width / 2, DEFAULT_FONT_SIZE * 15 + 150, Maroon), __FUNCTION__);
 	checkDraw(tumDrawText(high_score, screen_mid - high_score_width / 2, DEFAULT_FONT_SIZE * 20 + 150, Maroon), __FUNCTION__);
-	checkDraw(tumDrawText(back, screen_mid - back_width / 2, DEFAULT_FONT_SIZE * 25 + 150, Maroon), __FUNCTION__);
+	// checkDraw(tumDrawText(back, screen_mid - back_width / 2, DEFAULT_FONT_SIZE * 25 + 150, Maroon), __FUNCTION__);
 
+}
+
+
+
+void vDrawGameOver(void)
+{
+	game_over_image = tumDrawLoadImage(GAME_OVER_FILENAME);
+	tumDrawSetLoadedImageScale(game_over_image, 1.5);
+	checkDraw(tumDrawLoadedImage(game_over_image, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4), __FUNCTION__);
+
+	char *replay = "Replay";
+	char *back = "Back";
+	tumFontSetSize((ssize_t)30);
+
+	tumGetTextSize(replay, &replay_width, &replay_height);
+	tumGetTextSize(back, &back_width, &back_height);
+
+
+
+	checkDraw(tumDrawText(replay, screen_mid - replay_width / 2, screen_height_mid - replay_height / 2, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(back, screen_mid - back_width / 2, screen_height_mid - back_height / 2 + 50, Maroon), __FUNCTION__);
+}
+
+void vDrawStartSingle(void)
+{
+	start_single_image = tumDrawLoadImage(SINGLE_START_FILENAME);
+	tumDrawSetLoadedImageScale(start_single_image, 1.5);
+	checkDraw(tumDrawLoadedImage(start_single_image, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4), __FUNCTION__);
+
+}
+
+int vCheckBack(void)
+{
+	int back_left = screen_mid - back_width / 2;
+	int back_right = screen_mid + back_width / 2;
+	int back_up = screen_height_mid - back_height / 2 + 50;
+	int back_down = screen_height_mid + back_height / 2 + 50;
+
+	mouse_x = tumEventGetMouseX();
+	mouse_y = tumEventGetMouseY();
+
+	if((mouse_x >= back_left) && (mouse_x <= back_right) && (mouse_y >= back_up) && (mouse_y <= back_down)) return 1;
+
+	return 0;
+}
+
+int vCheckReplay(void)
+{
+	int replay_left = screen_mid - replay_width / 2;
+	int replay_right = screen_mid + replay_width / 2;
+	int replay_up = screen_height_mid - replay_height / 2;
+	int replay_down = screen_height_mid + replay_height / 2;
+
+	mouse_x = tumEventGetMouseX();
+	mouse_y = tumEventGetMouseY();
+
+	if((mouse_x >= replay_left) && (mouse_x <= replay_right) && (mouse_y >= replay_up) && (mouse_y <= replay_down)) return 1;
+
+	return 0;
 }
 
 int vCheckMenuMouse(void)
@@ -164,15 +221,6 @@ int vCheckSingle(void)
 
 	return 0;
 }
-
-void vDrawStartSingle(void)
-{
-	start_single_image = tumDrawLoadImage(SINGLE_START_FILENAME);
-	tumDrawSetLoadedImageScale(start_single_image, 1.5);
-	checkDraw(tumDrawLoadedImage(start_single_image, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4), __FUNCTION__);
-
-}
-
 
 void vDrawBackground(void)
 {
