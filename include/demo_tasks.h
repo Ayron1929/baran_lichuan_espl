@@ -10,6 +10,7 @@ extern TaskHandle_t DemoTask3;
 extern TaskHandle_t DemoSendTask;
 extern TaskHandle_t Game;
 extern TaskHandle_t SinglePlayer;
+extern TaskHandle_t GameOver;
 
 
 int createDemoTasks(void);

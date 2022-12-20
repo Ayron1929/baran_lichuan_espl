@@ -12,12 +12,14 @@
 #include "async_message_queues.h"
 #include "async_sockets.h"
 #include "buttons.h"
-#include"sm.h"
+#include "sm.h"
+#include "buttons.h"
 
 
 TaskHandle_t Game = NULL;
 TaskHandle_t DemoTask2 = NULL;
 TaskHandle_t SinglePlayer = NULL;
+TaskHandle_t GameOver = NULL;
 
 // Task to just pereodically run the state machine
 void vStatesTask(void *pvParameters)
@@ -41,10 +43,10 @@ void vTaskGame(void *pvParameters)
 				    FETCH_EVENT_NO_GL_CHECK);
 		xGetButtonInput();
 
-
-		if (tumEventGetMouseLeft() && vCheckMenuMouse())
-		{
-			states_set_state(1);
+		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
+			if(buttons.buttons[KEYCODE(Q)]) exit(EXIT_SUCCESS);
+			if (tumEventGetMouseLeft() && vCheckMenuMouse()) states_set_state(1);
+			xSemaphoreGive(buttons.lock);
 		}
 
 		vDrawBase();
@@ -71,9 +73,10 @@ void vDemoTask2(void *pvParameters)
 		vDrawSubmenu();
 		vDrawQuit();
 
-		if (tumEventGetMouseLeft() && vCheckSingle())
-		{
-			states_set_state(2);
+		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
+			if(buttons.buttons[KEYCODE(Q)]) exit(EXIT_SUCCESS);
+			if (tumEventGetMouseLeft() && vCheckSingle()) states_set_state(2);
+			xSemaphoreGive(buttons.lock);
 		}
 
 		tumDrawUpdateScreen();
@@ -94,11 +97,35 @@ void vTaskSingle(void *pvParameters)
 		vDrawQuit();
 		vDrawStartSingle();
 
+		// if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
+		// 	if(buttons.buttons[KEYCODE(Q)]) exit(EXIT_SUCCESS);
+		// 	if (buttons.buttons[KEYCODE(G)]) states_set_state(3);
+		// 	xSemaphoreGive(buttons.lock);
+		// }
+
 		tumDrawUpdateScreen();
 		vTaskDelay(20);
 
 	}
 	
+}
+
+void vTaskGameOver(void *pvParameters)
+{
+	while (1) {
+		tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
+				    FETCH_EVENT_NO_GL_CHECK);		
+		xGetButtonInput();
+		tumDrawBindThread();
+		vDrawBackground();
+		
+		vDrawQuit();
+
+
+		tumDrawUpdateScreen();
+		vTaskDelay(20);
+
+	}	
 }
 
 int createTasks(void)
@@ -109,11 +136,14 @@ int createTasks(void)
 		    mainGENERIC_PRIORITY + 1, &DemoTask2);
 	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 2, NULL,
 		    mainGENERIC_PRIORITY + 1, &SinglePlayer);
+	xTaskCreate(vTaskGameOver, "Game OVer", mainGENERIC_STACK_SIZE * 2, NULL,
+		    mainGENERIC_PRIORITY + 1, &GameOver);	
 
 
 	vTaskSuspend(Game);
 	vTaskSuspend(DemoTask2);
 	vTaskSuspend(SinglePlayer);
+	vTaskSuspend(GameOver);
 
 	return 0;
 }

@@ -49,6 +49,18 @@ void EnterSingleStart(void *enter_single_start)
     printf("Run Single Player\n");
 }
 
+void ExitSingleStart(void *eixt_single_start)
+{
+    vTaskSuspend(SinglePlayer);
+    printf("Exit Single Player\n");
+}
+
+void EnterGameOver(void *enter_game_over)
+{
+    vTaskResume(GameOver);
+    printf("Enter Game Over\n");
+}
+
 
 
 void GameMenu(void* pvParameters)

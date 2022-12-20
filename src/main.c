@@ -77,7 +77,8 @@ int main(int argc, char *argv[])
 
     states_add(NULL, EnterStartMenu, NULL, ExitStartMenu, 0, "START_MENU");
     states_add(NULL, EnterSettingMenu, NULL, ExitSettingMenu, 1, "SETTING_MENU");
-    states_add(NULL, EnterSingleStart, NULL, NULL, 2, "SINGLE_PLAYER");
+    states_add(NULL, EnterSingleStart, NULL, ExitSingleStart, 2, "SINGLE_PLAYER");
+    states_add(NULL, EnterGameOver, NULL, NULL, 3, "Game Over");
     
 
     states_init();
