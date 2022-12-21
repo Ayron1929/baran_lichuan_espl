@@ -68,7 +68,31 @@ void ExitGameOver(void *exit_game_over)
     printf("Exit Game Over\n");
 }
 
+void EnterCheatMode(void *enter_cheat_mode)
+{
+    vTaskResume(CheatMode);
+    printf("Enter Cheat Mode\n");
+    printf("Run Cheat Mode\n");
+}
 
+void ExitCheatMode(void *exit_cheat_mode)
+{
+    vTaskSuspend(CheatMode);
+    printf("Exit Cheat Mode\n");
+}
+
+void EnterViewScores(void * enter_view_scores)
+{
+    vTaskResume(ViewScores);
+    printf("Enter View Scores\n");
+    printf("Run View Scores\n");
+}
+
+void ExitViewScores(void *exit_view_scores)
+{
+    vTaskSuspend(ViewScores);
+    printf("Exit View Scores\n");
+}
 
 void GameMenu(void* pvParameters)
 {

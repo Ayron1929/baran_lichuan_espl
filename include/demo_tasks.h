@@ -11,10 +11,13 @@ extern TaskHandle_t DemoSendTask;
 extern TaskHandle_t Game;
 extern TaskHandle_t SinglePlayer;
 extern TaskHandle_t GameOver;
+extern TaskHandle_t CheatMode;
+extern TaskHandle_t ViewScores;
 
 
 int createDemoTasks(void);
 void deleteDemoTasks(void);
 void vStatesTask(void *pvParameters);
+void vCheatMode(void *pvParameters);
 
 #endif // __DEMO_TASKS_H__
