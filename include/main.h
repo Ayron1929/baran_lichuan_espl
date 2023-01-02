@@ -4,7 +4,7 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 
-#include "state_machine.h"
+//#include "state_machine.h"
 
 extern SemaphoreHandle_t DrawSignal;
 

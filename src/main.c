@@ -23,10 +23,11 @@
 
 #include "demo_tasks.h"
 #include "buttons.h"
-#include "state_machine.h"
+#include "sm.h"
 #include "defines.h"
 #include "bird.h"
 #include "pipes.h"
+#include "game_menu.h"
 
 #include "AsyncIO.h"
 
@@ -36,6 +37,7 @@ SemaphoreHandle_t pipe3Signal = NULL;
 
 SemaphoreHandle_t DrawSignal = NULL;
 static TaskHandle_t BufferSwap = NULL;
+static TaskHandle_t GameMenuHandle = NULL;
 
 void vSwapBuffers(void *pvParameters)
 {
@@ -43,7 +45,8 @@ void vSwapBuffers(void *pvParameters)
 	xLastWakeTime = xTaskGetTickCount();
 	const TickType_t frameratePeriod = 20;
 
-	while (1) {
+	while (1)
+	{
 		tumDrawUpdateScreen();
 		tumEventFetchEvents(FETCH_EVENT_BLOCK);
 		xSemaphoreGive(DrawSignal);
@@ -57,22 +60,26 @@ int main(int argc, char *argv[])
 
 	printf("Initializing: ");
 
-	if (tumDrawInit(bin_folder_path)) {
+	if (tumDrawInit(bin_folder_path))
+	{
 		PRINT_ERROR("Failed to initialize drawing");
 		goto err_init_drawing;
 	}
 
-	if (tumEventInit()) {
+	if (tumEventInit())
+	{
 		PRINT_ERROR("Failed to initialize events");
 		goto err_init_events;
 	}
 
-	if (tumSoundInit(bin_folder_path)) {
+	if (tumSoundInit(bin_folder_path))
+	{
 		PRINT_ERROR("Failed to initialize audio");
 		goto err_init_audio;
 	}
 
-	if (buttonsInit()) {
+	if (buttonsInit())
+	{
 		PRINT_ERROR("Failed to create buttons lock");
 		goto err_buttons_lock;
 	}
@@ -80,12 +87,25 @@ int main(int argc, char *argv[])
 	DrawSignal = xSemaphoreCreateBinary();
 
 	xTaskCreate(vSwapBuffers, "BufferSwapTask", mainGENERIC_STACK_SIZE * 2,
-		    NULL, configMAX_PRIORITIES, &BufferSwap);
+				NULL, configMAX_PRIORITIES, &BufferSwap);
+	xTaskCreate(GameMenuHandle, "Game Menu", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &GameMenuHandle);
+	xTaskCreate(vStatesTask, "States", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, NULL);
 
-	if (createTasks()) {
+	if (createTasks())
+	{
 		PRINT_ERROR("Failed to create tasks");
 		goto err_demotask;
 	}
+
+	//states_add(NULL, EnterStartMenu, NULL, ExitStartMenu, 0, "START_MENU");
+	//states_add(NULL, EnterSettingMenu, NULL, ExitSettingMenu, 1, "SETTING_MENU");
+	//states_add(NULL, EnterSingleStart, NULL, ExitSingleStart, 2, "SINGLE_PLAYER");
+	//states_add(NULL, EnterGameOver, NULL, ExitGameOver, 3, "Game Over");
+	//states_add(NULL, EnterCheatMode, NULL, ExitCheatMode, 4, "Cheat Mode");
+	//states_add(NULL, EnterViewScores, NULL, ExitViewScores, 5, "View Scores");
+
+	states_init();
+	states_run();
 
 	tumFUtilPrintTaskStateList();
 	vTaskStartScheduler();

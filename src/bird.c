@@ -12,7 +12,7 @@
 #include "async_message_queues.h"
 #include "async_sockets.h"
 #include "buttons.h"
-#include "state_machine.h"
+#include "sm.h"
 #include "bird.h"
 #include <stdbool.h>
 
