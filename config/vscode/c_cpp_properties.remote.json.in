@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "name": "FreeRTOS Emulator",
+            "intelliSenseMode": "clang-x64",
+            "includePath": [
+                "${workspaceFolder}/**",
+            ],
+            "defines": []
+        }
+    ],
+    "version": 4
+}
