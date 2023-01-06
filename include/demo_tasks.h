@@ -3,10 +3,9 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include <stdbool.h>
 
 extern TaskHandle_t Game;
-extern TaskHandle_t DemoTask2;
-
 
 int createTasks(void);
 void deleteTasks(void);

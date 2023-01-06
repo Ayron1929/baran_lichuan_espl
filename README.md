@@ -1,4 +1,1 @@
-Lichuan Qin
-EI
-
-hello world
+Flappy Bird with FreeRTOS
