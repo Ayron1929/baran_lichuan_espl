@@ -27,7 +27,6 @@
 #include "task.h"
 
 
-
 SemaphoreHandle_t DrawSignal = NULL;
 
 static TaskHandle_t GameMenuHandle = NULL;

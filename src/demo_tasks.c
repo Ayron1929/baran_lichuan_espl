@@ -38,8 +38,8 @@ void vStatesTask(void *pvParameters)
 void vTaskGame(void *pvParameters)
 {
 
-	vDrawBird(); // vDrawInitAnimations()
-	vDrawBackground();
+	//vDrawBird(); // vDrawInitAnimations()
+	
 
 	TickType_t xLastFrameTime = xTaskGetTickCount();
 
@@ -61,6 +61,7 @@ void vTaskGame(void *pvParameters)
 					xSemaphoreGive(buttons.lock);
 				}
 
+				vDrawBackground();
 				vDrawBase();
 				vDrawmenu();
 
