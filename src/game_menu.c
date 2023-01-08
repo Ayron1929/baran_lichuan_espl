@@ -10,11 +10,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "sm.h"
 #include "game_menu.h"
 
 
-void EnterStartMenu(void* enter_start_menu)
+
+void EnterStartMenu(void *enter_start_menu)
 {
     vTaskResume(Game);
 
@@ -22,7 +24,7 @@ void EnterStartMenu(void* enter_start_menu)
     printf("Run Start Menu\n");
 }
 
-void ExitStartMenu(void* exit_start_menu)
+void ExitStartMenu(void *exit_start_menu)
 {
     vTaskSuspend(Game);
     printf("Exit Start Menu\n");
@@ -36,7 +38,7 @@ void EnterSettingMenu(void *enter_setting_menu)
     printf("Run Setting Menu\n");
 }
 
-void ExitSettingMenu(void* exit_setting_menu)
+void ExitSettingMenu(void *exit_setting_menu)
 {
     vTaskSuspend(DemoTask2);
     printf("Exit Setting Menu\n");
@@ -44,9 +46,32 @@ void ExitSettingMenu(void* exit_setting_menu)
 
 void EnterSingleStart(void *enter_single_start)
 {
-    vTaskResume(SinglePlayer);
+    vTaskResume(StartSingle);
     printf("Enter Single Player\n");
+    // if (tumEventGetMouseLeft() == true)
+    //     {
+    //         vTaskSuspend(StartSingle);
+            
+    //     }
+    
+}
+void RunSingleStart(void *run_single_start)
+{
+
+    // if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
+    // {
+
+        if (tumEventGetMouseLeft() && vCheckSingleTest())
+        {
+            vTaskSuspend(StartSingle);
+            vTaskResume(SinglePlayer);
+        }      
+        // xSemaphoreGive(buttons.lock);
+    // }
+
+ 
     printf("Run Single Player\n");
+    // vTaskResume(SinglePlayer);
 }
 
 void ExitSingleStart(void *eixt_single_start)
@@ -81,7 +106,7 @@ void ExitCheatMode(void *exit_cheat_mode)
     printf("Exit Cheat Mode\n");
 }
 
-void EnterViewScores(void * enter_view_scores)
+void EnterViewScores(void *enter_view_scores)
 {
     vTaskResume(ViewScores);
     printf("Enter View Scores\n");
@@ -94,18 +119,12 @@ void ExitViewScores(void *exit_view_scores)
     printf("Exit View Scores\n");
 }
 
-void GameMenu(void* pvParameters)
+void GameMenu(void *pvParameters)
 {
 
-
-    while(1)
+    while (1)
     {
 
         vTaskDelay(10);
     }
-
 }
-
-
-
-

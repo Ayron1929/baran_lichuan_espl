@@ -13,7 +13,7 @@ extern TaskHandle_t SinglePlayer;
 extern TaskHandle_t GameOver;
 extern TaskHandle_t CheatMode;
 extern TaskHandle_t ViewScores;
-
+extern TaskHandle_t StartSingle;
 
 int createDemoTasks(void);
 void deleteDemoTasks(void);

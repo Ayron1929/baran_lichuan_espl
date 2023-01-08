@@ -15,6 +15,8 @@ void ExitGameOver(void *exit_game_over);
 void ExitCheatMode(void *exit_cheat_mode);
 void ExitViewScores(void *exit_view_scores);
 
+void RunSingleStart(void *run_single_start);
+
 
 
 

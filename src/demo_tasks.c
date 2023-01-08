@@ -14,7 +14,8 @@
 #include "buttons.h"
 #include "sm.h"
 #include "buttons.h"
-
+#include "bird.h"
+#include "pipes.h"
 
 TaskHandle_t Game = NULL;
 TaskHandle_t DemoTask2 = NULL;
@@ -22,11 +23,13 @@ TaskHandle_t SinglePlayer = NULL;
 TaskHandle_t GameOver = NULL;
 TaskHandle_t CheatMode = NULL;
 TaskHandle_t ViewScores = NULL;
+TaskHandle_t StartSingle = NULL;
 
 // Task to just pereodically run the state machine
 void vStatesTask(void *pvParameters)
 {
-	while(1){
+	while (1)
+	{
 		states_run();
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
@@ -34,176 +37,246 @@ void vStatesTask(void *pvParameters)
 
 void vTaskGame(void *pvParameters)
 {
-	tumDrawBindThread();
-	vDrawBird(); //vDrawInitAnimations()
+
+	vDrawBird(); // vDrawInitAnimations()
 	vDrawBackground();
 
-    TickType_t xLastFrameTime = xTaskGetTickCount();
+	TickType_t xLastFrameTime = xTaskGetTickCount();
 
-	while (1) {
-		tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
-				    FETCH_EVENT_NO_GL_CHECK);
-		xGetButtonInput();
+	while (1)
+	{
+		if (DrawSignal)
+			if (xSemaphoreTake(DrawSignal, portMAX_DELAY) ==
+				pdTRUE)
+			{
+				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
+									FETCH_EVENT_NO_GL_CHECK);
+				xGetButtonInput();
 
-		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
+				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
+				{
 
-			if (tumEventGetMouseLeft() && vCheckMenuMouse()) states_set_state(1);
-			xSemaphoreGive(buttons.lock);
-		}
+					if (tumEventGetMouseLeft() && vCheckMenuMouse())
+						states_set_state(1);
+					xSemaphoreGive(buttons.lock);
+				}
 
-		vDrawBase();
-		vDrawmenu();
+				vDrawBase();
+				vDrawmenu();
 
-		vDrawSpriteAnimations(xLastFrameTime);
-		xLastFrameTime = xTaskGetTickCount();
-		
-		tumDrawUpdateScreen();
+				vDrawSpriteAnimations(xLastFrameTime);
+				xLastFrameTime = xTaskGetTickCount();
+			}
 
-		
-		vTaskDelay(20);
+		// vTaskDelay(20);
 	}
 }
 
 void vDemoTask2(void *pvParameters)
 {
-	while (1) {
-		tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
-				    FETCH_EVENT_NO_GL_CHECK);		
-		xGetButtonInput();
-		tumDrawBindThread();
-		vDrawBackground();
-		vDrawSubmenu();
+	while (1)
+	{
+		if (DrawSignal)
+			if (xSemaphoreTake(DrawSignal, portMAX_DELAY) ==
+				pdTRUE)
+			{
+				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
+									FETCH_EVENT_NO_GL_CHECK);
+				// xGetButtonInput();
+				// tumDrawBindThread();
+				vDrawBackground();
+				vDrawSubmenu();
 
-		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
+				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
+				{
 
-			if (tumEventGetMouseLeft() && vCheckSingle()) states_set_state(2);
-			if (tumEventGetMouseLeft() && vCheckCheatMode()) states_set_state(4);
-			if (tumEventGetMouseLeft() && vCheckViewScores()) states_set_state(5);
+					if (tumEventGetMouseLeft() && vCheckSingle())
+						states_set_state(2);
+					if (tumEventGetMouseLeft() && vCheckCheatMode())
+						states_set_state(4);
+					if (tumEventGetMouseLeft() && vCheckViewScores())
+						states_set_state(5);
 
-			xSemaphoreGive(buttons.lock);
-		}
+					xSemaphoreGive(buttons.lock);
+				}
 
-		tumDrawUpdateScreen();
-
-		vTaskDelay(20);
+				// vTaskDelay(20);
+			}
 	}
 }
 
 void vTaskSingle(void *pvParameters)
 {
-	while (1) {
-		tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
-				    FETCH_EVENT_NO_GL_CHECK);		
-		xGetButtonInput();
-		tumDrawBindThread();
-		vDrawBackground();
+	vDrawBird();
+	vDrawBase();
+	pipesInit();
+	birdInit();
+	TickType_t xLastFrameTime = xTaskGetTickCount();
 
-		vDrawStartSingle();
+	while (1)
+	{
+		if (DrawSignal)
+			if (xSemaphoreTake(DrawSignal, portMAX_DELAY) ==
+				pdTRUE)
+			{
+				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
+									FETCH_EVENT_NO_GL_CHECK);
+				xGetButtonInput();
 
-		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
+				// if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
+				// {
 
-			if (tumEventGetMouseLeft() && vCheckSingleTest()) states_set_state(3);
+				// 	if (tumEventGetMouseLeft() && vCheckSingleTest())
+				// 		states_set_state(3);
 
-			xSemaphoreGive(buttons.lock);
-		}
+				// 	xSemaphoreGive(buttons.lock);
+				// }
 
-		tumDrawUpdateScreen();
-		vTaskDelay(20);
-
+				vDrawBackground();
+				//vDrawStartSingle();
+				vDrawPipes();
+				// countScore();
+				vDrawScore();
+				vCheckCollision();
+				vBirdStatus();
+				vBirdMovement();
+				vDrawSpriteAnimations(xLastFrameTime);
+				xLastFrameTime = xTaskGetTickCount();
+			}
 	}
-	
+}
+
+void vTaskStartSingle(void *pvParameters) {
+
+	vDrawBase();
+	vDrawBird();
+	birdInit();
+
+
+	while (1)
+	{
+		if (DrawSignal)
+			if (xSemaphoreTake(DrawSignal, portMAX_DELAY) ==
+				pdTRUE)
+			{
+				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
+									FETCH_EVENT_NO_GL_CHECK);
+				xGetButtonInput();
+			
+				vDrawBackground();
+				vDrawStartSingle();
+
+			}
+	}
+
 }
 
 void vTaskGameOver(void *pvParameters)
 {
-	while (1) {
-		tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
-				    FETCH_EVENT_NO_GL_CHECK);		
-		xGetButtonInput();
-		tumDrawBindThread();
-		vDrawBackground();
-		
-		vDrawGameOver();
+	while (1)
+	{
+		if (DrawSignal)
+			if (xSemaphoreTake(DrawSignal, portMAX_DELAY) ==
+				pdTRUE)
+			{
+				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
+									FETCH_EVENT_NO_GL_CHECK);
+				xGetButtonInput();
 
-		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
+				vDrawBackground();
 
-			if (tumEventGetMouseLeft() && vCheckReplay()) states_set_state(2);
-			if(tumEventGetMouseLeft() && vCheckGameOverBack()) states_set_state(1);
+				vDrawGameOver();
 
-			xSemaphoreGive(buttons.lock);
-		}
+				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
+				{
 
-		tumDrawUpdateScreen();
-		vTaskDelay(20);
+					if (tumEventGetMouseLeft() && vCheckReplay())
+						states_set_state(2);
+					if (tumEventGetMouseLeft() && vCheckGameOverBack())
+						states_set_state(1);
 
-	}	
+					xSemaphoreGive(buttons.lock);
+				}
+
+				// vTaskDelay(20);
+			}
+	}
 }
 
 void vCheatMode(void *pvParameters)
 {
-	while (1) {
-		tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
-				    FETCH_EVENT_NO_GL_CHECK);		
-		xGetButtonInput();
-		tumDrawBindThread();
-		vDrawBackground();
-		
-		vDrawCheatMode();
+	while (1)
+		if (DrawSignal)
+			if (xSemaphoreTake(DrawSignal, portMAX_DELAY) ==
+				pdTRUE)
+			{
+				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
+									FETCH_EVENT_NO_GL_CHECK);
+				xGetButtonInput();
 
-		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
+				vDrawBackground();
 
-			
-			if(tumEventGetMouseLeft() && vCheckCheatModeBack()) states_set_state(1);
+				vDrawCheatMode();
 
-			xSemaphoreGive(buttons.lock);
-		}
+				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
+				{
 
-		tumDrawUpdateScreen();
-		vTaskDelay(20);
+					if (tumEventGetMouseLeft() && vCheckCheatModeBack())
+						states_set_state(1);
 
-	}	
+					xSemaphoreGive(buttons.lock);
+				}
+
+				// vTaskDelay(20);
+			}
 }
 
 void vViewScores(void *pvParameters)
 {
-	while (1) {
-		tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
-				    FETCH_EVENT_NO_GL_CHECK);		
-		xGetButtonInput();
-		tumDrawBindThread();
-		vDrawBackground();
-		
-		vDrawCheatMode();
+	while (1)
+	{
+		if (DrawSignal)
+			if (xSemaphoreTake(DrawSignal, portMAX_DELAY) ==
+				pdTRUE)
+			{
+				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
+									FETCH_EVENT_NO_GL_CHECK);
+				xGetButtonInput();
 
-		if(xSemaphoreTake(buttons.lock, 0) == pdTRUE){
+				vDrawBackground();
 
-			
-			if(tumEventGetMouseLeft() && vCheckCheatModeBack()) states_set_state(1);
+				vDrawCheatMode();
 
-			xSemaphoreGive(buttons.lock);
-		}
+				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
+				{
 
-		tumDrawUpdateScreen();
-		vTaskDelay(20);
+					if (tumEventGetMouseLeft() && vCheckCheatModeBack())
+						states_set_state(1);
 
-	}	
+					xSemaphoreGive(buttons.lock);
+				}
+
+				//vTaskDelay(20);
+			}
+	}
 }
 
 int createTasks(void)
 {
 	xTaskCreate(vTaskGame, "Game", mainGENERIC_STACK_SIZE * 20, NULL,
-		    mainGENERIC_PRIORITY + 1, &Game);
+				mainGENERIC_PRIORITY + 1, &Game);
 	xTaskCreate(vDemoTask2, "DemoTask2", mainGENERIC_STACK_SIZE * 2, NULL,
-		    mainGENERIC_PRIORITY + 1, &DemoTask2);
+				mainGENERIC_PRIORITY + 1, &DemoTask2);
 	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 2, NULL,
-		    mainGENERIC_PRIORITY + 1, &SinglePlayer);
+				mainGENERIC_PRIORITY + 1, &SinglePlayer);
 	xTaskCreate(vTaskGameOver, "Game OVer", mainGENERIC_STACK_SIZE * 2, NULL,
-		    mainGENERIC_PRIORITY + 1, &GameOver);	
+				mainGENERIC_PRIORITY + 1, &GameOver);
 	xTaskCreate(vCheatMode, "Cheat Mode", mainGENERIC_STACK_SIZE * 2, NULL,
-		    mainGENERIC_PRIORITY + 1, &CheatMode);	
+				mainGENERIC_PRIORITY + 1, &CheatMode);
 	xTaskCreate(vViewScores, "View Scores", mainGENERIC_STACK_SIZE * 2, NULL,
-		    mainGENERIC_PRIORITY + 1, &ViewScores);	
+				mainGENERIC_PRIORITY + 1, &ViewScores);
 
+	xTaskCreate(vTaskStartSingle, "Start Single", mainGENERIC_STACK_SIZE * 2, NULL, mainGENERIC_PRIORITY +1,&StartSingle);
 
 	vTaskSuspend(Game);
 	vTaskSuspend(DemoTask2);
@@ -211,19 +284,23 @@ int createTasks(void)
 	vTaskSuspend(GameOver);
 	vTaskSuspend(CheatMode);
 	vTaskSuspend(ViewScores);
+	vTaskSuspend(StartSingle);
 
 	return 0;
 }
 
 void deleteTasks(void)
 {
-	if (Game) {
+	if (Game)
+	{
 		vTaskDelete(Game);
 	}
-	if (DemoTask2) {
+	if (DemoTask2)
+	{
 		vTaskDelete(DemoTask2);
 	}
-	if(SinglePlayer){
+	if (SinglePlayer)
+	{
 		vTaskDelete(SinglePlayer);
 	}
 	if (GameOver)
@@ -238,7 +315,8 @@ void deleteTasks(void)
 	{
 		vTaskDelete(ViewScores);
 	}
-	
-	
-	
+	if (StartSingle)
+	{
+		vTaskDelete(StartSingle);
+	}
 }

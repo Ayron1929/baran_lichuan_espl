@@ -28,9 +28,26 @@
 
 
 
-// SemaphoreHandle_t DrawSignal = NULL;
+SemaphoreHandle_t DrawSignal = NULL;
 
 static TaskHandle_t GameMenuHandle = NULL;
+
+
+static TaskHandle_t BufferSwap = NULL;
+
+void vSwapBuffers(void *pvParameters)
+{
+	TickType_t xLastWakeTime;
+	xLastWakeTime = xTaskGetTickCount();
+	const TickType_t frameratePeriod = 20;
+
+	while (1) {
+		tumDrawUpdateScreen();
+		tumEventFetchEvents(FETCH_EVENT_BLOCK);
+		xSemaphoreGive(DrawSignal);
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(frameratePeriod));
+	}
+}
 
 int main(int argc, char *argv[])
 {
@@ -62,8 +79,11 @@ int main(int argc, char *argv[])
         goto err_buttons_lock;
     }
 
-    // StateQueue = xQueueCreate(STATE_QUEUE_LENGTH, sizeof(unsigned char));
-    // xTaskCreate(basicSequentialStateMachine, "State Machine", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &StateMachine);
+    DrawSignal = xSemaphoreCreateBinary();
+
+	xTaskCreate(vSwapBuffers, "BufferSwapTask", mainGENERIC_STACK_SIZE * 2,
+		    NULL, configMAX_PRIORITIES, &BufferSwap);
+
 
     xTaskCreate(GameMenu, "Game Menu", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &GameMenuHandle);
     xTaskCreate(vStatesTask, "States", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, NULL);
@@ -77,27 +97,14 @@ int main(int argc, char *argv[])
 
     states_add(NULL, EnterStartMenu, NULL, ExitStartMenu, 0, "START_MENU");
     states_add(NULL, EnterSettingMenu, NULL, ExitSettingMenu, 1, "SETTING_MENU");
-    states_add(NULL, EnterSingleStart, NULL, ExitSingleStart, 2, "SINGLE_PLAYER");
+    states_add(NULL, EnterSingleStart, RunSingleStart, ExitSingleStart, 2, "SINGLE_PLAYER");
     states_add(NULL, EnterGameOver, NULL, ExitGameOver, 3, "Game Over");
     states_add(NULL, EnterCheatMode, NULL, ExitCheatMode, 4, "Cheat Mode");
     states_add(NULL, EnterViewScores, NULL, ExitViewScores, 5, "View Scores");
-    
 
     states_init();
     states_run();
     
-
-
-    
-
-
-
-    
-    
-
-
-
-
 
     vTaskStartScheduler();
     tumFUtilPrintTaskStateList();

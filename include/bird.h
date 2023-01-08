@@ -1,12 +1,21 @@
 #ifndef __BIRD_H__
 #define __BIRD_H__
 
-typedef struct Bird {
-    
+#include <stdbool.h>
+struct bird {
+	int birdY;
+	int birdX;
+	float birdVelocity;
+	float gravity;
 
-    int x;
-    int y;
-    
-};
+} player1;
+
+extern bool bBirdAlive;
+extern bool bCollision;
+
+void birdInit(void);
+void vBirdMovement(void);
+void vBirdStatus(void);
+
 
 #endif
