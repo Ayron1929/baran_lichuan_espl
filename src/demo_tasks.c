@@ -38,8 +38,6 @@ void vStatesTask(void *pvParameters)
 void vTaskGame(void *pvParameters)
 {
 
-	// vDrawBird(); // vDrawInitAnimations()
-
 	TickType_t xLastFrameTime = xTaskGetTickCount();
 
 	while (1)
@@ -65,7 +63,6 @@ void vTaskGame(void *pvParameters)
 				vDrawmenu();
 
 				vDrawSpriteAnimations(xLastFrameTime);
-				xLastFrameTime = xTaskGetTickCount();
 			}
 
 		// vTaskDelay(20);
@@ -110,7 +107,7 @@ void vTaskSingle(void *pvParameters)
 	vDrawBird();
 	vDrawBase();
 	pipesInit();
-	//birdInit();
+	// birdInit();
 	TickType_t xLastFrameTime = xTaskGetTickCount();
 
 	while (1)
@@ -140,6 +137,20 @@ void vTaskSingle(void *pvParameters)
 				vBirdMovement();
 				vDrawSpriteAnimations(xLastFrameTime);
 				xLastFrameTime = xTaskGetTickCount();
+
+				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
+				{
+
+					if (player1.birdY == SCREEN_HEIGHT - 175)
+					{
+
+						vTaskDelay(500);
+						states_set_state(3);
+
+						vTaskSuspend(SinglePlayer);
+					}
+					xSemaphoreGive(buttons.lock);
+				}
 			}
 	}
 }
@@ -169,6 +180,11 @@ void vTaskStartSingle(void *pvParameters)
 
 void vTaskGameOver(void *pvParameters)
 {
+
+	vDrawBase();
+
+	TickType_t xLastFrameTime = xTaskGetTickCount();
+
 	while (1)
 	{
 		if (DrawSignal)
@@ -179,21 +195,24 @@ void vTaskGameOver(void *pvParameters)
 									FETCH_EVENT_NO_GL_CHECK);
 				xGetButtonInput();
 
-				vDrawBackground();
-
-				vDrawGameOver();
-
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
 
 					if (tumEventGetMouseLeft() && vCheckReplay())
-						vBirdReset();
 						states_set_state(2);
+						vBirdReset();
 					if (tumEventGetMouseLeft() && vCheckGameOverBack())
 						states_set_state(1);
 
 					xSemaphoreGive(buttons.lock);
 				}
+				vDrawBackground();
+
+				vDrawPipes();
+				vDrawScore();
+				vDrawGameOver();
+				vDrawSpriteAnimations(xLastFrameTime);
+				xLastFrameTime = xTaskGetTickCount();
 
 				// vTaskDelay(20);
 			}
@@ -232,7 +251,7 @@ void vCheatMode(void *pvParameters)
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
 					// if we do it with escape, gotta add a text that says "esc to go back"
-					if (buttons.buttons[KEYCODE(ESCAPE)]) //tumEventGetMouseLeft() && vCheckCheatModeBack()
+					if (buttons.buttons[KEYCODE(ESCAPE)]) // tumEventGetMouseLeft() && vCheckCheatModeBack()
 						states_set_state(1);
 
 					xSemaphoreGive(buttons.lock);
