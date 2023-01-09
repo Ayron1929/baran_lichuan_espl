@@ -16,6 +16,7 @@ extern bool bCollision;
 void birdInit(void);
 void vBirdMovement(void);
 void vBirdStatus(void);
+void vBirdReset(void);
 
 
 #endif

@@ -38,8 +38,7 @@ void vStatesTask(void *pvParameters)
 void vTaskGame(void *pvParameters)
 {
 
-	//vDrawBird(); // vDrawInitAnimations()
-	
+	// vDrawBird(); // vDrawInitAnimations()
 
 	TickType_t xLastFrameTime = xTaskGetTickCount();
 
@@ -134,9 +133,7 @@ void vTaskSingle(void *pvParameters)
 				// }
 
 				vDrawBackground();
-				//vDrawStartSingle();
 				vDrawPipes();
-				// countScore();
 				vDrawScore();
 				vCheckCollision();
 				vBirdStatus();
@@ -147,12 +144,12 @@ void vTaskSingle(void *pvParameters)
 	}
 }
 
-void vTaskStartSingle(void *pvParameters) {
+void vTaskStartSingle(void *pvParameters)
+{
 
 	vDrawBase();
 	vDrawBird();
 	birdInit();
-
 
 	while (1)
 	{
@@ -163,13 +160,11 @@ void vTaskStartSingle(void *pvParameters) {
 				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
 									FETCH_EVENT_NO_GL_CHECK);
 				xGetButtonInput();
-			
+
 				vDrawBackground();
 				vDrawStartSingle();
-
 			}
 	}
-
 }
 
 void vTaskGameOver(void *pvParameters)
@@ -192,6 +187,7 @@ void vTaskGameOver(void *pvParameters)
 				{
 
 					if (tumEventGetMouseLeft() && vCheckReplay())
+						vBirdReset();
 						states_set_state(2);
 					if (tumEventGetMouseLeft() && vCheckGameOverBack())
 						states_set_state(1);
@@ -206,6 +202,12 @@ void vTaskGameOver(void *pvParameters)
 
 void vCheatMode(void *pvParameters)
 {
+	vDrawBird();
+	vDrawBase();
+	pipesInit();
+	birdInit();
+	TickType_t xLastFrameTime = xTaskGetTickCount();
+
 	while (1)
 		if (DrawSignal)
 			if (xSemaphoreTake(DrawSignal, portMAX_DELAY) ==
@@ -219,10 +221,18 @@ void vCheatMode(void *pvParameters)
 
 				vDrawCheatMode();
 
+				vDrawPipes();
+				vDrawScore();
+
+				vBirdStatus();
+				vBirdMovement();
+				vDrawSpriteAnimations(xLastFrameTime);
+				xLastFrameTime = xTaskGetTickCount();
+
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
 
-					if (tumEventGetMouseLeft() && vCheckCheatModeBack())
+					if (buttons.buttons[KEYCODE(ESCAPE)]) //tumEventGetMouseLeft() && vCheckCheatModeBack()
 						states_set_state(1);
 
 					xSemaphoreGive(buttons.lock);
@@ -257,7 +267,7 @@ void vViewScores(void *pvParameters)
 					xSemaphoreGive(buttons.lock);
 				}
 
-				//vTaskDelay(20);
+				// vTaskDelay(20);
 			}
 	}
 }
@@ -265,11 +275,11 @@ void vViewScores(void *pvParameters)
 int createTasks(void)
 {
 	xTaskCreate(vTaskGame, "Game", mainGENERIC_STACK_SIZE * 20, NULL,
-				mainGENERIC_PRIORITY + 1, &Game);
+				mainGENERIC_PRIORITY + 4, &Game);
 	xTaskCreate(vDemoTask2, "DemoTask2", mainGENERIC_STACK_SIZE * 2, NULL,
 				mainGENERIC_PRIORITY + 1, &DemoTask2);
 	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 2, NULL,
-				mainGENERIC_PRIORITY + 1, &SinglePlayer);
+				mainGENERIC_PRIORITY + 4, &SinglePlayer);
 	xTaskCreate(vTaskGameOver, "Game OVer", mainGENERIC_STACK_SIZE * 2, NULL,
 				mainGENERIC_PRIORITY + 1, &GameOver);
 	xTaskCreate(vCheatMode, "Cheat Mode", mainGENERIC_STACK_SIZE * 2, NULL,
@@ -277,7 +287,7 @@ int createTasks(void)
 	xTaskCreate(vViewScores, "View Scores", mainGENERIC_STACK_SIZE * 2, NULL,
 				mainGENERIC_PRIORITY + 1, &ViewScores);
 
-	xTaskCreate(vTaskStartSingle, "Start Single", mainGENERIC_STACK_SIZE * 2, NULL, mainGENERIC_PRIORITY +1,&StartSingle);
+	xTaskCreate(vTaskStartSingle, "Start Single", mainGENERIC_STACK_SIZE * 2, NULL, mainGENERIC_PRIORITY + 1, &StartSingle);
 
 	vTaskSuspend(Game);
 	vTaskSuspend(DemoTask2);

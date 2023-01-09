@@ -37,6 +37,17 @@ void vBirdStatus(void)
 	}
 }
 
+void vBirdReset(void) {
+		
+	player1.birdY = SCREEN_HEIGHT / 2;
+	player1.birdVelocity = 0.0f;
+	
+	score = 0;
+	
+	bCollision = false;
+
+}
+
 
 void vBirdMovement(void)
 {

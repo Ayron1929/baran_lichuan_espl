@@ -18,6 +18,8 @@ void vDrawmenu(void);
 void vDrawSubmenu(void);
 void vDrawStartSingle(void);
 
+extern int score;
+
 
 
 #endif //__DRAW_H__
