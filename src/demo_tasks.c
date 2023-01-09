@@ -231,7 +231,7 @@ void vCheatMode(void *pvParameters)
 
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
-
+					// if we do it with escape, gotta add a text that says "esc to go back"
 					if (buttons.buttons[KEYCODE(ESCAPE)]) //tumEventGetMouseLeft() && vCheckCheatModeBack()
 						states_set_state(1);
 
