@@ -110,7 +110,7 @@ void vTaskSingle(void *pvParameters)
 	vDrawBird();
 	vDrawBase();
 	pipesInit();
-	birdInit();
+	//birdInit();
 	TickType_t xLastFrameTime = xTaskGetTickCount();
 
 	while (1)
@@ -148,8 +148,8 @@ void vTaskStartSingle(void *pvParameters)
 {
 
 	vDrawBase();
-	vDrawBird();
 	birdInit();
+	vDrawBird();
 
 	while (1)
 	{
@@ -275,11 +275,11 @@ void vViewScores(void *pvParameters)
 int createTasks(void)
 {
 	xTaskCreate(vTaskGame, "Game", mainGENERIC_STACK_SIZE * 20, NULL,
-				mainGENERIC_PRIORITY + 4, &Game);
+				mainGENERIC_PRIORITY + 1, &Game);
 	xTaskCreate(vDemoTask2, "DemoTask2", mainGENERIC_STACK_SIZE * 2, NULL,
 				mainGENERIC_PRIORITY + 1, &DemoTask2);
 	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 2, NULL,
-				mainGENERIC_PRIORITY + 4, &SinglePlayer);
+				mainGENERIC_PRIORITY + 1, &SinglePlayer);
 	xTaskCreate(vTaskGameOver, "Game OVer", mainGENERIC_STACK_SIZE * 2, NULL,
 				mainGENERIC_PRIORITY + 1, &GameOver);
 	xTaskCreate(vCheatMode, "Cheat Mode", mainGENERIC_STACK_SIZE * 2, NULL,
