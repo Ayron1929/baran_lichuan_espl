@@ -41,6 +41,7 @@ void vSwapBuffers(void *pvParameters)
 	const TickType_t frameratePeriod = 20;
 
 	while (1) {
+        
 		tumDrawUpdateScreen();
 		tumEventFetchEvents(FETCH_EVENT_BLOCK);
 		xSemaphoreGive(DrawSignal);
@@ -84,8 +85,8 @@ int main(int argc, char *argv[])
 		    NULL, configMAX_PRIORITIES, &BufferSwap);
 
 
-    xTaskCreate(GameMenu, "Game Menu", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, &GameMenuHandle);
-    xTaskCreate(vStatesTask, "States", mainGENERIC_STACK_SIZE * 2, NULL, configMAX_PRIORITIES - 1, NULL);
+    xTaskCreate(GameMenu, "Game Menu", mainGENERIC_STACK_SIZE * 4, NULL, configMAX_PRIORITIES - 1, &GameMenuHandle);
+    xTaskCreate(vStatesTask, "States", mainGENERIC_STACK_SIZE * 4, NULL, configMAX_PRIORITIES - 1, NULL);
 
 
     if (createTasks())

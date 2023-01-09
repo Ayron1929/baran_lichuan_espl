@@ -19,10 +19,12 @@
 
 #include <stdlib.h>
 
+#define GET_READY_FILENAME "getReady.png"
 #define SINGLE_START_FILENAME "message.png"
 #define EXIT_FILENAME "Exit.png"
 #define GAME_OVER_FILENAME "gameover.png"
 
+#define LOGO_FILENAME "logo.png"
 #define BACKGROUND_FILENAME "background-day.png"
 #define BASE_FILENAME "base.png"
 #define PIPES_FILENAME "double_pipe.png"
@@ -40,9 +42,11 @@
 #define NINE_FILENAME "9.png"
 
 image_handle_t background_image = NULL;
+image_handle_t logo_image = NULL;
 image_handle_t base_image = NULL;
 image_handle_t base_image2 = NULL;
 image_handle_t start_single_image = NULL;
+image_handle_t get_ready_image = NULL;
 image_handle_t quit_image = NULL;
 image_handle_t game_over_image = NULL;
 
@@ -69,7 +73,6 @@ sequence_handle_t forward_sequence = NULL;
 sequence_handle_t reverse_sequence = NULL;
 sequence_handle_t base_forward_sequence = NULL;
 
-
 int score = 0;
 int menu_width;
 int menu_height;
@@ -89,7 +92,6 @@ char *replay = "Replay";
 char *test = "Game Over";
 int test_width, test_height;
 
-
 void GetMouse(void)
 {
 	mouse_x = tumEventGetMouseX();
@@ -98,40 +100,51 @@ void GetMouse(void)
 
 void GetSize(void)
 {
-    tumFontSetSize((ssize_t)30);
+	tumFontSetSize((ssize_t)30);
 
 	tumGetTextSize(menu, &menu_width, &menu_height);
 	tumGetTextSize(single, &single_width, &single_height);
-	tumGetTextSize(multi, &multi_width, NULL);	
+	tumGetTextSize(multi, &multi_width, NULL);
 	tumGetTextSize(cheats, &cheats_width, &cheats_height);
 	tumGetTextSize(high_score, &high_score_width, &high_score_height);
 	tumGetTextSize(replay, &replay_width, &replay_height);
 	tumGetTextSize(back, &back_width, &back_height);
-	
 }
-
 
 void checkDraw(unsigned char status, const char *msg)
 {
-	if (status) {
+	if (status)
+	{
 		if (msg)
 			fprints(stderr, "[ERROR] %s, %s\n", msg,
-				tumGetErrorMessage());
-		else {
+					tumGetErrorMessage());
+		else
+		{
 			fprints(stderr, "[ERROR] %s\n", tumGetErrorMessage());
 		}
 	}
 }
 
-void vDrawmenu(void)
+void vDrawLogo(void)
+{
+
+	if (logo_image == NULL)
+		logo_image = tumDrawLoadImage(LOGO_FILENAME);
+
+	tumDrawSetLoadedImageScale(logo_image, 0.2);
+
+	checkDraw(tumDrawLoadedImage(logo_image, SCREEN_WIDTH / 2 - tumDrawGetLoadedImageWidth(logo_image) / 2, SCREEN_HEIGHT / 2 - tumDrawGetLoadedImageHeight(logo_image) / 2),
+			  __FUNCTION__);
+}
+
+void vDrawMenu(void)
 {
 	GetSize();
 
-    if (!tumGetTextSize(menu, &menu_width, NULL))
-        checkDraw(tumDrawText(menu, SCREEN_WIDTH * 0.5- menu_width * 0.5,
-                              SCREEN_HEIGHT * 0.77, Maroon),
-                  __FUNCTION__);
-
+	if (!tumGetTextSize(menu, &menu_width, NULL))
+		checkDraw(tumDrawText(menu, SCREEN_WIDTH * 0.5 - menu_width * 0.5,
+							  SCREEN_HEIGHT * 0.77, Maroon),
+				  __FUNCTION__);
 }
 
 void vDrawQuit(void)
@@ -141,27 +154,24 @@ void vDrawQuit(void)
 	tumDrawSetLoadedImageScale(quit_image, 0.2);
 	tumDrawGetLoadedImageSize(quit_image, &quit_width, &quit_height);
 	checkDraw(tumDrawLoadedImage(quit_image, SCREEN_WIDTH - quit_width - 10, 10 + quit_height), __FUNCTION__);
-
 }
 
 void vDrawStop(void)
 {
 	// static char stop[100] = { 0 };
-    // static int stop_width;
+	// static int stop_width;
 
 	// ssize_t prev_font_size = tumFontGetCurFontSize();
 
-
-    // tumFontSetSize((ssize_t)30);
+	// tumFontSetSize((ssize_t)30);
 	// sprintf(stop, "[P]ause");
 
-    // if (!tumGetTextSize((char *)stop, &stop_width, NULL))
-    //     checkDraw(tumDrawText(stop, SCREEN_WIDTH - stop_width - 100,
-    //                           DEFAULT_FONT_SIZE * 0.5, Black),
-    //               __FUNCTION__);
+	// if (!tumGetTextSize((char *)stop, &stop_width, NULL))
+	//     checkDraw(tumDrawText(stop, SCREEN_WIDTH - stop_width - 100,
+	//                           DEFAULT_FONT_SIZE * 0.5, Black),
+	//               __FUNCTION__);
 
 	// tumFontSetSize(prev_font_size);
-
 }
 
 void vDrawSubmenu(void)
@@ -173,14 +183,13 @@ void vDrawSubmenu(void)
 	checkDraw(tumDrawText(cheats, screen_mid - cheats_width / 2, DEFAULT_FONT_SIZE * 15 + 150, Maroon), __FUNCTION__);
 	checkDraw(tumDrawText(high_score, screen_mid - high_score_width / 2, DEFAULT_FONT_SIZE * 20 + 150, Maroon), __FUNCTION__);
 	// checkDraw(tumDrawText(back, screen_mid - back_width / 2, DEFAULT_FONT_SIZE * 25 + 150, Maroon), __FUNCTION__);
-
 }
 
 void vDrawGameOver(void)
 {
 	game_over_image = tumDrawLoadImage(GAME_OVER_FILENAME);
 	tumDrawSetLoadedImageScale(game_over_image, 1.5);
-	checkDraw(tumDrawLoadedImage(game_over_image, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4), __FUNCTION__);
+	checkDraw(tumDrawLoadedImage(game_over_image, SCREEN_WIDTH / 2 - tumDrawGetLoadedImageWidth(game_over_image) / 2, SCREEN_HEIGHT / 4 - tumDrawGetLoadedImageHeight(game_over_image) / 2), __FUNCTION__);
 
 	GetSize();
 
@@ -197,15 +206,16 @@ void vDrawCheatMode(void)
 
 void vDrawStartSingle(void)
 {
-	start_single_image = tumDrawLoadImage(SINGLE_START_FILENAME);
-	tumDrawSetLoadedImageScale(start_single_image, 1.5);
-	checkDraw(tumDrawLoadedImage(start_single_image, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4), __FUNCTION__);
+	get_ready_image = tumDrawLoadImage(GET_READY_FILENAME);
+	tumDrawSetLoadedImageScale(get_ready_image, 1.2);
+	checkDraw(tumDrawLoadedImage(get_ready_image, SCREEN_WIDTH / 2 - tumDrawGetLoadedImageWidth(get_ready_image) / 2,
+								 SCREEN_HEIGHT / 2 - tumDrawGetLoadedImageHeight(get_ready_image) / 2),
+			  __FUNCTION__);
 
 	GetSize();
 
 	tumGetTextSize(test, &test_width, &test_height);
 	checkDraw(tumDrawText(test, screen_mid - test_width / 2, SCREEN_HEIGHT * 0.2, Maroon), __FUNCTION__);
-
 }
 
 int vCheckViewScores(void)
@@ -219,7 +229,8 @@ int vCheckViewScores(void)
 
 	GetMouse();
 
-	if((mouse_x >= score_left) && (mouse_x <= score_right) && (mouse_y >= score_up) && (mouse_y <= score_down)) return 1;
+	if ((mouse_x >= score_left) && (mouse_x <= score_right) && (mouse_y >= score_up) && (mouse_y <= score_down))
+		return 1;
 
 	return 0;
 }
@@ -234,8 +245,9 @@ int vCheckSingleTest(void)
 	int test_down = SCREEN_HEIGHT * 0.2 + test_height;
 
 	GetMouse();
-	
-	if((mouse_x >= test_left) && (mouse_x <= test_right) && (mouse_y >= test_up) && (mouse_y <= test_down)) return 1;
+
+	if ((mouse_x >= test_left) && (mouse_x <= test_right) && (mouse_y >= test_up) && (mouse_y <= test_down))
+		return 1;
 
 	return 0;
 }
@@ -250,8 +262,9 @@ int vCheckGameOverBack(void)
 	int back_down = screen_height_mid + back_height / 2 + 50;
 
 	GetMouse();
-	
-	if((mouse_x >= back_left) && (mouse_x <= back_right) && (mouse_y >= back_up) && (mouse_y <= back_down)) return 1;
+
+	if ((mouse_x >= back_left) && (mouse_x <= back_right) && (mouse_y >= back_up) && (mouse_y <= back_down))
+		return 1;
 
 	return 0;
 }
@@ -267,7 +280,8 @@ int vCheckCheatModeBack(void)
 
 	GetMouse();
 
-	if((mouse_x >= back_left) && (mouse_x <= back_right) && (mouse_y >= back_up) && (mouse_y <= back_down)) return 1;
+	if ((mouse_x >= back_left) && (mouse_x <= back_right) && (mouse_y >= back_up) && (mouse_y <= back_down))
+		return 1;
 
 	return 0;
 }
@@ -283,7 +297,8 @@ int vCheckReplay(void)
 
 	GetMouse();
 
-	if((mouse_x >= replay_left) && (mouse_x <= replay_right) && (mouse_y >= replay_up) && (mouse_y <= replay_down)) return 1;
+	if ((mouse_x >= replay_left) && (mouse_x <= replay_right) && (mouse_y >= replay_up) && (mouse_y <= replay_down))
+		return 1;
 
 	return 0;
 }
@@ -299,7 +314,8 @@ int vCheckMenuMouse(void)
 
 	GetMouse();
 
-	if((mouse_x >= menu_left) && (mouse_x <= menu_right) && (mouse_y >= menu_up) && (mouse_y <= menu_down)) return 1;
+	if ((mouse_x >= menu_left) && (mouse_x <= menu_right) && (mouse_y >= menu_up) && (mouse_y <= menu_down))
+		return 1;
 
 	return 0;
 }
@@ -315,7 +331,8 @@ int vCheckSingle(void)
 
 	GetMouse();
 
-	if((mouse_x >= single_left) && (mouse_x <= single_right) && (mouse_y >= single_up) && (mouse_y <= single_down)) return 1;
+	if ((mouse_x >= single_left) && (mouse_x <= single_right) && (mouse_y >= single_up) && (mouse_y <= single_down))
+		return 1;
 
 	return 0;
 }
@@ -331,7 +348,8 @@ int vCheckCheatMode(void)
 
 	GetMouse();
 
-	if((mouse_x >= cheat_left) && (mouse_x <= cheat_right) && (mouse_y >= cheat_up) && (mouse_y <= cheat_down)) return 1;
+	if ((mouse_x >= cheat_left) && (mouse_x <= cheat_right) && (mouse_y >= cheat_up) && (mouse_y <= cheat_down))
+		return 1;
 
 	return 0;
 }
@@ -340,19 +358,21 @@ void vDrawBackground(void)
 {
 	static int image_height;
 
-	if (background_image == NULL) {
+	if (background_image == NULL)
+	{
 		background_image = tumDrawLoadImage(BACKGROUND_FILENAME);
 	}
 	tumDrawSetLoadedImageScale(background_image, 1.5);
 
 	if ((image_height = tumDrawGetLoadedImageHeight(background_image)) !=
-	    -1)
+		-1)
 		checkDraw(tumDrawLoadedImage(background_image, 0, 0),
-			  __FUNCTION__);
-	else {
+				  __FUNCTION__);
+	else
+	{
 		fprints(stderr,
-			"Failed to get size of image '%s', does it exist?\n",
-			BACKGROUND_FILENAME);
+				"Failed to get size of image '%s', does it exist?\n",
+				BACKGROUND_FILENAME);
 	}
 }
 
@@ -370,7 +390,7 @@ void vDrawBase(void)
 		tumDrawAnimationCreate(base_spritesheet);
 
 	tumDrawAnimationAddSequence(base_animation, "FORWARDS", 0, 0,
-				    SPRITE_SEQUENCE_HORIZONTAL_POS, 4);
+								SPRITE_SEQUENCE_HORIZONTAL_POS, 4);
 
 	base_forward_sequence = tumDrawAnimationSequenceInstantiate(
 		base_animation, "FORWARDS", 300);
@@ -378,7 +398,8 @@ void vDrawBase(void)
 
 void vDrawBird(void)
 {
-	if (bird_midflap == NULL) {
+	if (bird_midflap == NULL)
+	{
 		bird_midflap = tumDrawLoadImage(BIRD_MIDFLAP_FILENAME);
 	}
 	tumDrawSetLoadedImageScale(bird_midflap, 1.49);
@@ -394,93 +415,114 @@ void vDrawBird(void)
 		tumDrawAnimationCreate(bird_spritesheet);
 
 	tumDrawAnimationAddSequence(bird_animation, "FORWARDS", 0, 0,
-				    SPRITE_SEQUENCE_HORIZONTAL_POS, 3);
+								SPRITE_SEQUENCE_HORIZONTAL_POS, 3);
 	tumDrawAnimationAddSequence(bird_animation, "REVERSE", 0, 3,
-				    SPRITE_SEQUENCE_HORIZONTAL_NEG, 3);
+								SPRITE_SEQUENCE_HORIZONTAL_NEG, 3);
 
 	forward_sequence = tumDrawAnimationSequenceInstantiate(bird_animation,
-							       "FORWARDS", 120);
+														   "FORWARDS", 120);
 	reverse_sequence = tumDrawAnimationSequenceInstantiate(bird_animation,
-							       "REVERSE", 120);
+														   "REVERSE", 120);
 }
 
 void vDrawSpriteAnimations(TickType_t xLastFrameTime)
 {
-	if (bBirdAlive == true) {
+	if (bBirdAlive == true)
+	{
 		tumDrawAnimationDrawFrame(forward_sequence,
-					  xTaskGetTickCount() - xLastFrameTime,
-					  player1.birdX, player1.birdY);
-	} else {
+								  xTaskGetTickCount() - xLastFrameTime,
+								  player1.birdX, player1.birdY);
+	}
+	else
+	{
 		tumDrawLoadedImage(bird_midflap, player1.birdX, player1.birdY);
 	}
 
-	if (bBirdAlive == true) {
+	if (bBirdAlive == true)
+	{
 		tumDrawAnimationDrawFrame(base_forward_sequence,
-					  xTaskGetTickCount() - xLastFrameTime,
-					  0, SCREEN_HEIGHT - 140);
-	} else { //stops at last drawn frame
+								  xTaskGetTickCount() - xLastFrameTime,
+								  0, SCREEN_HEIGHT - 140);
+	}
+	else
+	{ // stops at last drawn frame
 		tumDrawAnimationDrawFrame(base_forward_sequence, 0, 0,
-					  SCREEN_HEIGHT - 140);
+								  SCREEN_HEIGHT - 140);
 	}
 }
 
 void vDrawPipes(void)
 {
-	if (pipe_1 == NULL) {
+	if (pipe_1 == NULL)
+	{
 		pipe_1 = tumDrawLoadImage(PIPES_FILENAME);
 	}
-	if (pipe_2 == NULL) {
+	if (pipe_2 == NULL)
+	{
 		pipe_2 = tumDrawLoadImage(PIPES_FILENAME);
 	}
-	if (pipe_3 == NULL) {
+	if (pipe_3 == NULL)
+	{
 		pipe_3 = tumDrawLoadImage(PIPES_FILENAME);
 	}
 	tumDrawSetLoadedImageScale(pipe_1, 0.5);
 	tumDrawSetLoadedImageScale(pipe_2, 0.5);
 	tumDrawSetLoadedImageScale(pipe_3, 0.5);
 
-	//pipe 1
-	if (bBirdAlive == true) {
+	// pipe 1
+	if (bBirdAlive == true)
+	{
 		checkDraw(tumDrawLoadedImage(pipe_1, pipe1.x, pipe1.y),
-			  __FUNCTION__);
+				  __FUNCTION__);
 		pipe1.x -= 2;
 
-		if (pipe1.x <= -52) {
+		if (pipe1.x <= -52)
+		{
 			pipe1.x = SCREEN_WIDTH + 116;
 			pipe1.y = -350 + rand() % 310;
 		}
-	} else { //stops moving when bird is dead
-		checkDraw(tumDrawLoadedImage(pipe_1, pipe1.x, pipe1.y),
-			  __FUNCTION__);
 	}
-	//pipe 2
-	if (bBirdAlive == true) {
+	else
+	{ // stops moving when bird is dead
+		checkDraw(tumDrawLoadedImage(pipe_1, pipe1.x, pipe1.y),
+				  __FUNCTION__);
+	}
+	// pipe 2
+	if (bBirdAlive == true)
+	{
 		checkDraw(tumDrawLoadedImage(pipe_2, pipe2.x, pipe2.y),
-			  __FUNCTION__);
+				  __FUNCTION__);
 		pipe2.x -= 2;
 
-		if (pipe2.x <= -52) {
+		if (pipe2.x <= -52)
+		{
 			pipe2.x = SCREEN_WIDTH + 116;
 			pipe2.y = -350 + rand() % 310;
 		}
-	} else {
+	}
+	else
+	{
 		checkDraw(tumDrawLoadedImage(pipe_2, pipe2.x, pipe2.y),
-			  __FUNCTION__);
+				  __FUNCTION__);
 	}
 
-	//pipe3
-	if (bBirdAlive == true) {
+	// pipe3
+	if (bBirdAlive == true)
+	{
 		checkDraw(tumDrawLoadedImage(pipe_3, pipe3.x, pipe3.y),
-			  __FUNCTION__);
+				  __FUNCTION__);
 		pipe3.x -= 2;
 
-		if (pipe3.x <= -52) {
+		if (pipe3.x <= -52)
+		{
 			pipe3.x = SCREEN_WIDTH + 116;
 			pipe3.y = -350 + rand() % 310;
 		}
-	} else {
+	}
+	else
+	{
 		checkDraw(tumDrawLoadedImage(pipe_3, pipe3.x, pipe3.y),
-			  __FUNCTION__);
+				  __FUNCTION__);
 	}
 }
 void vDrawScore(void)
@@ -491,38 +533,49 @@ void vDrawScore(void)
 	int digit10 = ((score - digit1) / 10) % 10;
 	int digit100 = ((score - 10 * digit10 - digit1) / 100) % 10;
 
-	if (zero == NULL) {
+	if (zero == NULL)
+	{
 		zero = tumDrawLoadImage(ZERO_FILENAME);
 	}
-	if (one == NULL) {
+	if (one == NULL)
+	{
 		one = tumDrawLoadImage(ONE_FILENAME);
 	}
-	if (two == NULL) {
+	if (two == NULL)
+	{
 		two = tumDrawLoadImage(TWO_FILENAME);
 	}
-	if (three == NULL) {
+	if (three == NULL)
+	{
 		three = tumDrawLoadImage(THREE_FILENAME);
 	}
-	if (four == NULL) {
+	if (four == NULL)
+	{
 		four = tumDrawLoadImage(FOUR_FILENAME);
 	}
-	if (five == NULL) {
+	if (five == NULL)
+	{
 		five = tumDrawLoadImage(FIVE_FILENAME);
 	}
-	if (six == NULL) {
+	if (six == NULL)
+	{
 		six = tumDrawLoadImage(SIX_FILENAME);
 	}
-	if (seven == NULL) {
+	if (seven == NULL)
+	{
 		seven = tumDrawLoadImage(SEVEN_FILENAME);
 	}
-	if (eight == NULL) {
+	if (eight == NULL)
+	{
 		eight = tumDrawLoadImage(EIGHT_FILENAME);
 	}
-	if (nine == NULL) {
+	if (nine == NULL)
+	{
 		nine = tumDrawLoadImage(NINE_FILENAME);
 	}
 
-	switch (digit1) {
+	switch (digit1)
+	{
 	case 0:
 		tumDrawLoadedImage(zero, 205, 72);
 		break;
@@ -548,7 +601,7 @@ void vDrawScore(void)
 		tumDrawLoadedImage(seven, 205, 72);
 		break;
 	case 8:
-		tumDrawLoadedImage(eight,205, 72);
+		tumDrawLoadedImage(eight, 205, 72);
 		break;
 	case 9:
 		tumDrawLoadedImage(nine, 205, 72);
@@ -557,8 +610,10 @@ void vDrawScore(void)
 		break;
 	}
 
-	if (score >= 10) {
-		switch (digit10) {
+	if (score >= 10)
+	{
+		switch (digit10)
+		{
 		case 0:
 			tumDrawLoadedImage(zero, 180, 72);
 			break;
@@ -594,8 +649,10 @@ void vDrawScore(void)
 		}
 	}
 
-	if (score >= 100) {
-		switch (digit100) {
+	if (score >= 100)
+	{
+		switch (digit100)
+		{
 		case 0:
 			tumDrawLoadedImage(zero, 160, 72);
 			break;

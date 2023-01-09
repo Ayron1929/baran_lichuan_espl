@@ -30,6 +30,7 @@ void birdInit(void){
 void vBirdStatus(void)
 {
 	if(bCollision == true) {
+
 		bBirdAlive = false;
 	}
 	else {
@@ -54,8 +55,9 @@ void vBirdMovement(void)
 	if (bBirdAlive == true) {
 		if((tumEventGetMouseLeft() == true)){ // Gotta add delay
 
+			tumSoundPlaySample(a3); //wing sound
 			player1.birdVelocity = 0.0f;
-			player1.birdVelocity += -player1.gravity * 10.0f;
+			player1.birdVelocity += -player1.gravity * 9.0f;
 			player1.birdY += player1.birdVelocity;
 
 		} else {
@@ -71,6 +73,7 @@ void vBirdMovement(void)
 		}
 		else {
 			player1.birdY = SCREEN_HEIGHT - 175;
+			
 		}
 	}
 	

@@ -9,12 +9,13 @@ extern image_handle_t pipe_2;
 extern image_handle_t pipe_3;
 
 void vDrawBackground(void);
+void vDrawLogo(void);
 void vDrawBase(void);
 void vDrawBird(void);
 void vDrawSpriteAnimations(TickType_t xLastFrameTime);
 void vDrawPipes(void);
 void vDrawScore(void);
-void vDrawmenu(void);
+void vDrawMenu(void);
 void vDrawSubmenu(void);
 void vDrawStartSingle(void);
 

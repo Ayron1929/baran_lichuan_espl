@@ -15,9 +15,10 @@ extern TaskHandle_t CheatMode;
 extern TaskHandle_t ViewScores;
 extern TaskHandle_t StartSingle;
 
-int createDemoTasks(void);
-void deleteDemoTasks(void);
+int createTasks(void);
+void deleteTasks(void);
 void vStatesTask(void *pvParameters);
 void vCheatMode(void *pvParameters);
+
 
 #endif // __DEMO_TASKS_H__

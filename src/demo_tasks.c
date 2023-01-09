@@ -37,11 +37,6 @@ void vStatesTask(void *pvParameters)
 
 void vTaskGame(void *pvParameters)
 {
-
-	// vDrawBird(); // vDrawInitAnimations()
-
-	TickType_t xLastFrameTime = xTaskGetTickCount();
-
 	while (1)
 	{
 		if (DrawSignal)
@@ -61,11 +56,8 @@ void vTaskGame(void *pvParameters)
 				}
 
 				vDrawBackground();
-				vDrawBase();
-				vDrawmenu();
-
-				vDrawSpriteAnimations(xLastFrameTime);
-				xLastFrameTime = xTaskGetTickCount();
+				vDrawLogo();
+				vDrawMenu();
 			}
 
 		// vTaskDelay(20);
@@ -82,8 +74,7 @@ void vDemoTask2(void *pvParameters)
 			{
 				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
 									FETCH_EVENT_NO_GL_CHECK);
-				// xGetButtonInput();
-				// tumDrawBindThread();
+
 				vDrawBackground();
 				vDrawSubmenu();
 
@@ -132,6 +123,7 @@ void vTaskSingle(void *pvParameters)
 				// 	xSemaphoreGive(buttons.lock);
 				// }
 
+
 				vDrawBackground();
 				vDrawPipes();
 				vDrawScore();
@@ -140,6 +132,21 @@ void vTaskSingle(void *pvParameters)
 				vBirdMovement();
 				vDrawSpriteAnimations(xLastFrameTime);
 				xLastFrameTime = xTaskGetTickCount();
+
+				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
+				{
+
+					if (player1.birdY == SCREEN_HEIGHT - 175){
+
+						vTaskDelay(250);
+						states_set_state(3);
+						vTaskSuspend(SinglePlayer);
+					}
+
+					xSemaphoreGive(buttons.lock);
+				}
+
+
 			}
 	}
 }
@@ -151,6 +158,8 @@ void vTaskStartSingle(void *pvParameters)
 	birdInit();
 	vBirdReset();
 	vDrawBird();
+
+	TickType_t xLastFrameTime = xTaskGetTickCount();
 
 	while (1)
 	{
@@ -164,12 +173,19 @@ void vTaskStartSingle(void *pvParameters)
 
 				vDrawBackground();
 				vDrawStartSingle();
+				vBirdStatus();
+				vDrawScore();
+				vDrawSpriteAnimations(xLastFrameTime);
+				xLastFrameTime = xTaskGetTickCount();
 			}
 	}
 }
 
 void vTaskGameOver(void *pvParameters)
-{
+{	
+	vDrawBase();
+
+	TickType_t xLastFrameTime = xTaskGetTickCount();
 	while (1)
 	{
 		if (DrawSignal)
@@ -181,15 +197,18 @@ void vTaskGameOver(void *pvParameters)
 				xGetButtonInput();
 
 				vDrawBackground();
-
+				vDrawPipes();
 				vDrawGameOver();
+				vDrawScore();
+				vDrawSpriteAnimations(xLastFrameTime);
+				xLastFrameTime = xTaskGetTickCount();
 
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
 
-					if (tumEventGetMouseLeft() && vCheckReplay())
-						vBirdReset();
+					if (buttons.buttons[KEYCODE(ESCAPE)])//tumEventGetMouseLeft() && vCheckReplay())
 						states_set_state(2);
+						//vBirdReset();
 					if (tumEventGetMouseLeft() && vCheckGameOverBack())
 						states_set_state(1);
 
@@ -273,22 +292,23 @@ void vViewScores(void *pvParameters)
 	}
 }
 
+
 int createTasks(void)
 {
-	xTaskCreate(vTaskGame, "Game", mainGENERIC_STACK_SIZE * 20, NULL,
-				mainGENERIC_PRIORITY + 5, &Game);
-	xTaskCreate(vDemoTask2, "DemoTask2", mainGENERIC_STACK_SIZE * 2, NULL,
-				mainGENERIC_PRIORITY + 3, &DemoTask2);
-	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 2, NULL,
-				mainGENERIC_PRIORITY + 5, &SinglePlayer);
-	xTaskCreate(vTaskGameOver, "Game Over", mainGENERIC_STACK_SIZE * 2, NULL,
-				mainGENERIC_PRIORITY + 2, &GameOver);
-	xTaskCreate(vCheatMode, "Cheat Mode", mainGENERIC_STACK_SIZE * 2, NULL,
-				mainGENERIC_PRIORITY + 2, &CheatMode);
-	xTaskCreate(vViewScores, "View Scores", mainGENERIC_STACK_SIZE * 2, NULL,
+	xTaskCreate(vTaskGame, "Game", mainGENERIC_STACK_SIZE * 5, NULL,
+				mainGENERIC_PRIORITY + 1, &Game);
+	xTaskCreate(vDemoTask2, "DemoTask2", mainGENERIC_STACK_SIZE * 5, NULL,
+				mainGENERIC_PRIORITY + 2, &DemoTask2);
+	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 5, NULL,
+				mainGENERIC_PRIORITY + 4, &SinglePlayer);
+	xTaskCreate(vTaskGameOver, "Game Over", mainGENERIC_STACK_SIZE * 5, NULL,
+				mainGENERIC_PRIORITY + 4, &GameOver);
+	xTaskCreate(vCheatMode, "Cheat Mode", mainGENERIC_STACK_SIZE * 5, NULL,
+				mainGENERIC_PRIORITY + 4, &CheatMode);
+	xTaskCreate(vViewScores, "View Scores", mainGENERIC_STACK_SIZE * 5, NULL,
 				mainGENERIC_PRIORITY + 1, &ViewScores);
 
-	xTaskCreate(vTaskStartSingle, "Start Single", mainGENERIC_STACK_SIZE * 2, NULL, mainGENERIC_PRIORITY + 1, &StartSingle);
+	xTaskCreate(vTaskStartSingle, "Start Single", mainGENERIC_STACK_SIZE * 5, NULL, mainGENERIC_PRIORITY + 3, &StartSingle);
 
 	vTaskSuspend(Game);
 	vTaskSuspend(DemoTask2);
