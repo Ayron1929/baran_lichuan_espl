@@ -12,6 +12,8 @@
         "main.h": "c",
         "buttons.h": "c",
         "cstdlib": "c",
-        "game_menu.h": "c"
+        "game_menu.h": "c",
+        "draw.h": "c",
+        "async_message_queues.h": "c"
     }
 }

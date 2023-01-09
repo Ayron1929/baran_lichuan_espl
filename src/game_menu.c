@@ -16,6 +16,7 @@
 
 
 
+
 void EnterStartMenu(void *enter_start_menu)
 {
     vTaskResume(Game);
@@ -32,7 +33,7 @@ void ExitStartMenu(void *exit_start_menu)
 
 void EnterSettingMenu(void *enter_setting_menu)
 {
-    vTaskResume(DemoTask2);
+    vTaskResume(Settings);
 
     printf("Enter Setting Menu\n");
     printf("Run Setting Menu\n");
@@ -40,7 +41,7 @@ void EnterSettingMenu(void *enter_setting_menu)
 
 void ExitSettingMenu(void *exit_setting_menu)
 {
-    vTaskSuspend(DemoTask2);
+    vTaskSuspend(Settings);
     printf("Exit Setting Menu\n");
 }
 
@@ -61,7 +62,7 @@ void RunSingleStart(void *run_single_start)
     // if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
     // {
 
-        if (tumEventGetMouseLeft() && vCheckSingleTest())
+        if (tumEventGetMouseLeft() && vCheckSinglePlay())
         {
             vTaskSuspend(StartSingle);
             vTaskResume(SinglePlayer);
@@ -70,7 +71,7 @@ void RunSingleStart(void *run_single_start)
     // }
 
  
-    printf("Run Single Player\n");
+    // printf("Run Single Player\n");
     // vTaskResume(SinglePlayer);
 }
 
@@ -85,6 +86,7 @@ void EnterGameOver(void *enter_game_over)
     vTaskResume(GameOver);
     printf("Enter Game Over\n");
     printf("Run Game Over\n");
+    
 }
 
 void ExitGameOver(void *exit_game_over)

@@ -186,12 +186,12 @@ int vCheckGameOverBack(void);
 int vCheckReplay(void);
 int vCheckCheatModeBack(void);
 int vCheckCheatMode(void);
-int vCheckSingleTest(void);
+int vCheckSinglePlay(void);
 int vCheckViewScores(void);
 
 void vDrawGameOver(void);
 void vDrawCheatMode(void);
-void vDrawSingleTest(void);
+void vDrawStartSingle(void);
 
 
 #endif /* STATES_H_ */

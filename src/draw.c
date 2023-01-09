@@ -19,9 +19,10 @@
 
 #include <stdlib.h>
 
-#define SINGLE_START_FILENAME "message.png"
+#define SINGLE_START_FILENAME "getReady.png"
 #define EXIT_FILENAME "Exit.png"
 #define GAME_OVER_FILENAME "gameover.png"
+#define FLAPPY_BIRD_FILENAME "flappy_bird.png"
 
 #define BACKGROUND_FILENAME "background-day.png"
 #define BASE_FILENAME "base.png"
@@ -45,6 +46,7 @@ image_handle_t base_image2 = NULL;
 image_handle_t start_single_image = NULL;
 image_handle_t quit_image = NULL;
 image_handle_t game_over_image = NULL;
+image_handle_t flappy_bird_image = NULL;
 
 image_handle_t pipe_1 = NULL;
 image_handle_t pipe_2 = NULL;
@@ -86,8 +88,10 @@ char *cheats = "Cheat Mode";
 char *high_score = "View Scores";
 char *replay = "Replay";
 
-char *test = "Game Over";
-int test_width, test_height;
+char *single_play = "Play";
+int single_play_width, single_play_height;
+static char scores[100];
+int scores_width, scores_height;
 
 
 void GetMouse(void)
@@ -107,6 +111,8 @@ void GetSize(void)
 	tumGetTextSize(high_score, &high_score_width, &high_score_height);
 	tumGetTextSize(replay, &replay_width, &replay_height);
 	tumGetTextSize(back, &back_width, &back_height);
+	tumGetTextSize(single_play, &single_play_width, &single_play_height);
+	tumGetTextSize(scores, &scores_width, &scores_height);
 	
 }
 
@@ -129,38 +135,52 @@ void vDrawmenu(void)
 
     if (!tumGetTextSize(menu, &menu_width, NULL))
         checkDraw(tumDrawText(menu, SCREEN_WIDTH * 0.5- menu_width * 0.5,
-                              SCREEN_HEIGHT * 0.77, Maroon),
+                              SCREEN_HEIGHT * 0.9, Maroon),
                   __FUNCTION__);
 
+
+
+	
 }
 
-void vDrawQuit(void)
+void vDrawFlappyBird(void)
 {
-	int quit_width, quit_height;
-	quit_image = tumDrawLoadImage(EXIT_FILENAME);
-	tumDrawSetLoadedImageScale(quit_image, 0.2);
-	tumDrawGetLoadedImageSize(quit_image, &quit_width, &quit_height);
-	checkDraw(tumDrawLoadedImage(quit_image, SCREEN_WIDTH - quit_width - 10, 10 + quit_height), __FUNCTION__);
+	if(flappy_bird_image == NULL)
+	{
+		flappy_bird_image = tumDrawLoadImage(FLAPPY_BIRD_FILENAME);
+	}
 
+	tumDrawSetLoadedImageScale(flappy_bird_image, 0.2);
+	checkDraw(tumDrawLoadedImage(flappy_bird_image, SCREEN_WIDTH / 7.5, SCREEN_HEIGHT / 4), __FUNCTION__);
 }
+
+// void vDrawQuit(void)
+// {
+// 	int quit_width, quit_height;
+// 	quit_image = tumDrawLoadImage(EXIT_FILENAME);
+// 	tumDrawSetLoadedImageScale(quit_image, 0.2);
+// 	tumDrawGetLoadedImageSize(quit_image, &quit_width, &quit_height);
+// 	checkDraw(tumDrawLoadedImage(quit_image, SCREEN_WIDTH - quit_width - 10, 10 + quit_height), __FUNCTION__);
+
+// }
 
 void vDrawStop(void)
 {
-	// static char stop[100] = { 0 };
-    // static int stop_width;
-
-	// ssize_t prev_font_size = tumFontGetCurFontSize();
+	static char stop[100] = { 0 };
+    static int stop_width;
 
 
-    // tumFontSetSize((ssize_t)30);
-	// sprintf(stop, "[P]ause");
 
-    // if (!tumGetTextSize((char *)stop, &stop_width, NULL))
-    //     checkDraw(tumDrawText(stop, SCREEN_WIDTH - stop_width - 100,
-    //                           DEFAULT_FONT_SIZE * 0.5, Black),
-    //               __FUNCTION__);
 
-	// tumFontSetSize(prev_font_size);
+    tumFontSetSize((ssize_t)30);
+	sprintf(stop, "[P]ause");
+
+    if (!tumGetTextSize((char *)stop, &stop_width, NULL))
+        checkDraw(tumDrawText(stop, screen_mid - stop_width / 2,
+                              SCREEN_HEIGHT * 0.8, Maroon),
+                  __FUNCTION__);
+
+
 
 }
 
@@ -178,14 +198,27 @@ void vDrawSubmenu(void)
 
 void vDrawGameOver(void)
 {
-	game_over_image = tumDrawLoadImage(GAME_OVER_FILENAME);
+	if(game_over_image == NULL)
+	{
+		game_over_image = tumDrawLoadImage(GAME_OVER_FILENAME);
+	}
+	
 	tumDrawSetLoadedImageScale(game_over_image, 1.5);
-	checkDraw(tumDrawLoadedImage(game_over_image, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4), __FUNCTION__);
+	checkDraw(tumDrawLoadedImage(game_over_image, SCREEN_WIDTH / 5.5, SCREEN_HEIGHT / 4), __FUNCTION__);
 
 	GetSize();
 
+
+
 	checkDraw(tumDrawText(replay, screen_mid - replay_width / 2, screen_height_mid - replay_height / 2, Maroon), __FUNCTION__);
 	checkDraw(tumDrawText(back, screen_mid - back_width / 2, screen_height_mid - back_height / 2 + 50, Maroon), __FUNCTION__);
+}
+
+void vShowScores(void)
+{
+	sprintf(scores, "Your Scores: %d", score);
+
+	checkDraw(tumDrawText((char *)scores, screen_mid - scores_width / 2, screen_height_mid - scores_height / 2 - 50, Maroon), __FUNCTION__);
 }
 
 void vDrawCheatMode(void)
@@ -197,14 +230,18 @@ void vDrawCheatMode(void)
 
 void vDrawStartSingle(void)
 {
-	start_single_image = tumDrawLoadImage(SINGLE_START_FILENAME);
+	if(start_single_image == NULL)
+	{
+		start_single_image = tumDrawLoadImage(SINGLE_START_FILENAME);
+	}
+	
 	tumDrawSetLoadedImageScale(start_single_image, 1.5);
-	checkDraw(tumDrawLoadedImage(start_single_image, SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4), __FUNCTION__);
+	checkDraw(tumDrawLoadedImage(start_single_image, SCREEN_WIDTH / 5.5, SCREEN_HEIGHT / 4), __FUNCTION__);
 
 	GetSize();
 
-	tumGetTextSize(test, &test_width, &test_height);
-	checkDraw(tumDrawText(test, screen_mid - test_width / 2, SCREEN_HEIGHT * 0.2, Maroon), __FUNCTION__);
+	
+	checkDraw(tumDrawText(single_play, screen_mid - single_play_width / 2, SCREEN_HEIGHT * 0.8, Maroon), __FUNCTION__);
 
 }
 
@@ -224,18 +261,18 @@ int vCheckViewScores(void)
 	return 0;
 }
 
-int vCheckSingleTest(void)
+int vCheckSinglePlay(void)
 {
 	GetSize();
 
-	int test_left = screen_mid - test_width / 2;
-	int test_right = screen_mid + test_width / 2;
-	int test_up = SCREEN_HEIGHT * 0.2;
-	int test_down = SCREEN_HEIGHT * 0.2 + test_height;
+	int single_play_left = screen_mid - single_play_width / 2;
+	int single_play_right = screen_mid + single_play_width / 2;
+	int single_play_up = SCREEN_HEIGHT * 0.8;
+	int single_play_down = SCREEN_HEIGHT * 0.8 + single_play_height;
 
 	GetMouse();
 	
-	if((mouse_x >= test_left) && (mouse_x <= test_right) && (mouse_y >= test_up) && (mouse_y <= test_down)) return 1;
+	if((mouse_x >= single_play_left) && (mouse_x <= single_play_right) && (mouse_y >= single_play_up) && (mouse_y <= single_play_down)) return 1;
 
 	return 0;
 }
@@ -294,8 +331,8 @@ int vCheckMenuMouse(void)
 
 	int menu_left = SCREEN_WIDTH / 2 - menu_width / 2;
 	int menu_right = SCREEN_WIDTH / 2 + menu_width / 2;
-	int menu_up = SCREEN_HEIGHT * 0.77;
-	int menu_down = SCREEN_HEIGHT * 0.77 + menu_height;
+	int menu_up = SCREEN_HEIGHT * 0.9;
+	int menu_down = SCREEN_HEIGHT * 0.9 + menu_height;
 
 	GetMouse();
 
@@ -354,6 +391,8 @@ void vDrawBackground(void)
 			"Failed to get size of image '%s', does it exist?\n",
 			BACKGROUND_FILENAME);
 	}
+
+
 }
 
 void vDrawBase(void)
