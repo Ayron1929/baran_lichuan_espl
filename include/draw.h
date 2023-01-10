@@ -8,6 +8,7 @@ extern image_handle_t pipe_1;
 extern image_handle_t pipe_2;
 extern image_handle_t pipe_3;
 extern image_handle_t flappy_bird_image;
+extern int score;
 
 void vDrawBackground(void);
 void vDrawBase(void);

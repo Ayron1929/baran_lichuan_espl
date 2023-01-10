@@ -13,6 +13,7 @@
 #include "async_sockets.h"
 #include "buttons.h"
 #include "bird.h"
+#include "pipes.h"
 
 #include <stdbool.h>
  
@@ -66,7 +67,14 @@ void vBirdMovement(void)
 	  
 }
 
+void vBirdReset(void) {
 
-//(tumEventGetMouseLeft() == true)
+	player1.birdY = SCREEN_HEIGHT / 2;
+	player1.birdVelocity = 0.0f;
 
-//buttons.buttons[KEYCODE(SPACE)]
+	score = 0;
+
+	bCollision = false;
+	pipesInit();
+
+}

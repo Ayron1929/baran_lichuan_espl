@@ -237,9 +237,17 @@ void vTaskGameOver(void *pvParameters)
 				{
 
 					if (tumEventGetMouseLeft() && vCheckReplay())
+					{
+						vBirdReset();
 						states_set_state(2);
+					}
+						
 					if (tumEventGetMouseLeft() && vCheckGameOverBack())
+					{
+						vBirdReset();
 						states_set_state(1);
+					}
+						
 
 					xSemaphoreGive(buttons.lock);
 				}
@@ -349,7 +357,11 @@ void vCheatMode(void *pvParameters)
 				{
 					// if we do it with escape, gotta add a text that says "esc to go back"
 					if (buttons.buttons[KEYCODE(ESCAPE)]) // tumEventGetMouseLeft() && vCheckCheatModeBack()
+					{
+						vBirdReset();
 						states_set_state(1);
+					}
+						
 
 					xSemaphoreGive(buttons.lock);
 				}
@@ -395,11 +407,11 @@ void vViewScores(void *pvParameters)
 int createTasks(void)
 {
 	xTaskCreate(vTaskGame, "Game", mainGENERIC_STACK_SIZE * 20, NULL,
-				mainGENERIC_PRIORITY + 1, &Game);
+				mainGENERIC_PRIORITY + 4, &Game);
 	xTaskCreate(vTaskSettings, "DemoTask2", mainGENERIC_STACK_SIZE * 2, NULL,
 				mainGENERIC_PRIORITY + 1, &Settings);
 	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 2, NULL,
-				mainGENERIC_PRIORITY + 1, &SinglePlayer);
+				mainGENERIC_PRIORITY + 4, &SinglePlayer);
 	xTaskCreate(vTaskGameOver, "Game OVer", mainGENERIC_STACK_SIZE * 2, NULL,
 				mainGENERIC_PRIORITY + 1, &GameOver);
 	xTaskCreate(vCheatMode, "Cheat Mode", mainGENERIC_STACK_SIZE * 2, NULL,
