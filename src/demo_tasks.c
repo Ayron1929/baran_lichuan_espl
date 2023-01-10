@@ -28,6 +28,7 @@ TaskHandle_t StartCheats = NULL;
 TaskHandle_t PauseMode = NULL;
 
 int pause = 0;
+int highscore = 0;
 
 // Task to just pereodically run the state machine
 void vStatesTask(void *pvParameters)
@@ -71,9 +72,6 @@ void vTaskGame(void *pvParameters)
 
 				
 				vDrawBackground();
-				
-				
-				
 				
 				
 				vDrawSpriteAnimations(xLastFrameTime);
@@ -121,8 +119,6 @@ void vTaskSettings(void *pvParameters)
 
 void vTaskSingle(void *pvParameters)
 {
-
-
 	
 	TickType_t xLastFrameTime = xTaskGetTickCount();
 
@@ -171,8 +167,6 @@ void vTaskSingle(void *pvParameters)
 					
 
 
-					
-				
 
 					xSemaphoreGive(buttons.lock);
 				}
@@ -185,11 +179,10 @@ void vTaskSingle(void *pvParameters)
 
 void vTaskStartSingle(void *pvParameters) {
 
-	vDrawBase();
+
 	vDrawBird();
 	birdInit();
 	pipesInit();
-	
 
 	while (1)
 	{
@@ -203,7 +196,6 @@ void vTaskStartSingle(void *pvParameters) {
 			
 				vDrawBackground();
 				vDrawStartSingle();
-
 			}
 	}
 
@@ -227,10 +219,10 @@ void vTaskGameOver(void *pvParameters)
 				vDrawBackground();
 
 				vDrawPipes();
-				vDrawScore();
 				vDrawSpriteAnimations(xLastFrameTime);
 				xLastFrameTime = xTaskGetTickCount();
 				vDrawGameOver();
+				vDrawScoreboard();
 				// vShowScores();
 
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
@@ -401,6 +393,17 @@ void vViewScores(void *pvParameters)
 
 				//vTaskDelay(20);
 			}
+	}
+}
+
+void vSetHighscore(void) {
+
+	bool newHigh = false;
+
+	if (score > highscore){
+
+		highscore = score;
+		newHigh = true;
 	}
 }
 

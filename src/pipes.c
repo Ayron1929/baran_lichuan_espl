@@ -19,11 +19,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-//int score = 0;
-char showScore[10];
-
-int highscore = 0;
-
 
 void pipesInit(void) {
 
@@ -48,6 +43,7 @@ void vCheckCollision(void){ //kinda messy but it works
 
         if(player1.birdY < pipe1.y + 400 || player1.birdY > pipe1.y + 600 - 36) {
 
+            tumSoundPlaySample(b3); // hit sound
             bCollision = true;
         }
     }
@@ -55,6 +51,7 @@ void vCheckCollision(void){ //kinda messy but it works
 
         if(player1.birdY < pipe2.y + 400 || player1.birdY > pipe2.y + 600 - 36) {
 
+            tumSoundPlaySample(b3); // hit sound
             bCollision = true;
         }
     }
@@ -62,10 +59,12 @@ void vCheckCollision(void){ //kinda messy but it works
 
         if(player1.birdY < pipe3.y + 400 || player1.birdY > pipe3.y + 600 - 36) {
 
+            tumSoundPlaySample(b3); // hit sound
             bCollision = true;
         }
     }
     if(player1.birdY > SCREEN_HEIGHT - 175 || player1.birdY < 0){
+        tumSoundPlaySample(a5);
         bCollision = true;
     }
 }
@@ -76,12 +75,15 @@ void countScore(void) {
     if(bBirdAlive == true) {
 
         if(pipe1.x == player1.birdX - 26) {
+            tumSoundPlaySample(a4);
             score++;
         }
         if(pipe2.x == player1.birdX - 26) {
+            tumSoundPlaySample(a4);
             score++;
         }
         if(pipe3.x == player1.birdX - 26) {
+            tumSoundPlaySample(a4);
             score++;
         }
     }

@@ -20,7 +20,9 @@ void vDrawmenu(void);
 void vDrawSubmenu(void);
 void vDrawStartSingle(void);
 void vDrawFlappyBird(void);
-
+void vDrawScoreboard(void);
+void vDrawStop(void);
+void vDrawQuit(void);
 
 
 #endif //__DRAW_H__

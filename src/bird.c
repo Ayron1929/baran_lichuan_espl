@@ -44,8 +44,9 @@ void vBirdMovement(void)
 	if (bBirdAlive == true) {
 		if((tumEventGetMouseLeft() == true)){ // Gotta add delay
 
+			tumSoundPlaySample(a3); //wing sound
 			player1.birdVelocity = 0.0f;
-			player1.birdVelocity += -player1.gravity * 10.0f;
+			player1.birdVelocity += -player1.gravity * 9.5f;
 			player1.birdY += player1.birdVelocity;
 
 		} else {

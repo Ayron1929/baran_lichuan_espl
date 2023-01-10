@@ -21,4 +21,8 @@ void vCheatMode(void *pvParameters);
 void vEnterCheats(void *pvParameters);
 void vPauseMode(void *pvParameters);
 
+void vSetHighscore(void);
+
+extern int highscore;
+
 #endif // __DEMO_TASKS_H__
