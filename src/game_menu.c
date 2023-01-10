@@ -49,11 +49,8 @@ void EnterSingleStart(void *enter_single_start)
 {
     vTaskResume(StartSingle);
     printf("Enter Single Player\n");
-    // if (tumEventGetMouseLeft() == true)
-    //     {
-    //         vTaskSuspend(StartSingle);
-            
-    //     }
+    printf("Run Single Player\n");
+
     
 }
 void RunSingleStart(void *run_single_start)
@@ -71,8 +68,8 @@ void RunSingleStart(void *run_single_start)
     // }
 
  
-    // printf("Run Single Player\n");
-    // vTaskResume(SinglePlayer);
+    
+    
 }
 
 void ExitSingleStart(void *eixt_single_start)
@@ -97,15 +94,40 @@ void ExitGameOver(void *exit_game_over)
 
 void EnterCheatMode(void *enter_cheat_mode)
 {
-    vTaskResume(CheatMode);
+    vTaskResume(StartCheats);
+
+
     printf("Enter Cheat Mode\n");
     printf("Run Cheat Mode\n");
+    
+}
+
+void RunCheatMode(void *run_cheat_mode)
+{
+    if(tumEventGetMouseLeft() && vCheckSinglePlay())
+    {
+        vTaskSuspend(StartCheats);
+        vTaskResume(CheatMode);
+        
+    }
 }
 
 void ExitCheatMode(void *exit_cheat_mode)
 {
     vTaskSuspend(CheatMode);
     printf("Exit Cheat Mode\n");
+}
+
+void EnterPauseMode(void *enter_pause_mode)
+{
+    vTaskResume(PauseMode);
+    printf("Enter Pause Mode\n");
+}
+
+void ExitPauseMode(void *exit_pause_mode)
+{
+    vTaskSuspend(PauseMode);
+    printf("Exit Pause Mode\n");
 }
 
 void EnterViewScores(void *enter_view_scores)

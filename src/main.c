@@ -98,8 +98,9 @@ int main(int argc, char *argv[])
     states_add(NULL, EnterSettingMenu, NULL, ExitSettingMenu, 1, "SETTING_MENU");
     states_add(NULL, EnterSingleStart, RunSingleStart, ExitSingleStart, 2, "SINGLE_PLAYER");
     states_add(NULL, EnterGameOver, NULL, ExitGameOver, 3, "Game Over");
-    states_add(NULL, EnterCheatMode, NULL, ExitCheatMode, 4, "Cheat Mode");
+    states_add(NULL, EnterCheatMode, RunCheatMode, ExitCheatMode, 4, "Cheat Mode");
     states_add(NULL, EnterViewScores, NULL, ExitViewScores, 5, "View Scores");
+    states_add(NULL, EnterPauseMode, NULL, ExitPauseMode, 6, "Pause Mode");
 
     states_init();
     states_run();

@@ -151,18 +151,26 @@ void vDrawFlappyBird(void)
 	}
 
 	tumDrawSetLoadedImageScale(flappy_bird_image, 0.2);
-	checkDraw(tumDrawLoadedImage(flappy_bird_image, SCREEN_WIDTH / 7.5, SCREEN_HEIGHT / 4), __FUNCTION__);
+	checkDraw(tumDrawLoadedImage(flappy_bird_image, SCREEN_WIDTH / 7, SCREEN_HEIGHT / 4), __FUNCTION__);
 }
 
-// void vDrawQuit(void)
-// {
-// 	int quit_width, quit_height;
-// 	quit_image = tumDrawLoadImage(EXIT_FILENAME);
-// 	tumDrawSetLoadedImageScale(quit_image, 0.2);
-// 	tumDrawGetLoadedImageSize(quit_image, &quit_width, &quit_height);
-// 	checkDraw(tumDrawLoadedImage(quit_image, SCREEN_WIDTH - quit_width - 10, 10 + quit_height), __FUNCTION__);
+void vDrawQuit(void)
+{
+	static char esc[100] = { 0 };
+    static int esc_width;
 
-// }
+
+
+
+    tumFontSetSize((ssize_t)30);
+	sprintf(esc, "[ESC]");
+
+    if (!tumGetTextSize((char *)esc, &esc_width, NULL))
+        checkDraw(tumDrawText(esc, screen_mid - esc_width / 2,
+                              SCREEN_HEIGHT * 0.9, Maroon),
+                  __FUNCTION__);
+
+}
 
 void vDrawStop(void)
 {
@@ -177,7 +185,7 @@ void vDrawStop(void)
 
     if (!tumGetTextSize((char *)stop, &stop_width, NULL))
         checkDraw(tumDrawText(stop, screen_mid - stop_width / 2,
-                              SCREEN_HEIGHT * 0.8, Maroon),
+                              SCREEN_HEIGHT * 0.9, Maroon),
                   __FUNCTION__);
 
 
@@ -224,8 +232,13 @@ void vShowScores(void)
 void vDrawCheatMode(void)
 {
 	GetSize();
+	score = 10;
+	sprintf(scores, "Start Scores: %d", score);
 
-	checkDraw(tumDrawText(back, screen_mid - back_width / 2, SCREEN_HEIGHT * 0.77, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText((char *)scores, screen_mid - scores_width / 2, screen_height_mid - scores_height / 2, Maroon), __FUNCTION__);
+
+	// checkDraw(tumDrawText(back, screen_mid - back_width / 2, SCREEN_HEIGHT * 0.77, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(single_play, screen_mid - single_play_width / 2, SCREEN_HEIGHT * 0.8, Maroon), __FUNCTION__);
 }
 
 void vDrawStartSingle(void)

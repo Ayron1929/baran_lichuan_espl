@@ -7,6 +7,7 @@ void EnterSingleStart(void *enter_single_start);
 void EnterGameOver(void *enter_game_over);
 void EnterCheatMode(void *enter_cheat_mode);
 void EnterViewScores(void * enter_view_scores);
+void EnterPauseMode(void *enter_pause_mode);
 
 void ExitStartMenu(void* exit_start_menu);
 void ExitSettingMenu(void* exit_setting_menu);
@@ -14,8 +15,10 @@ void ExitSingleStart(void *eixt_single_start);
 void ExitGameOver(void *exit_game_over);
 void ExitCheatMode(void *exit_cheat_mode);
 void ExitViewScores(void *exit_view_scores);
+void ExitPauseMode(void *exit_pause_mode);
 
 void RunSingleStart(void *run_single_start);
+void RunCheatMode(void *run_cheat_mode);
 
 
 

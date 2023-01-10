@@ -13,8 +13,12 @@ extern TaskHandle_t GameOver;
 extern TaskHandle_t CheatMode;
 extern TaskHandle_t ViewScores;
 extern TaskHandle_t StartSingle;
+extern TaskHandle_t StartCheats;
+extern TaskHandle_t PauseMode;
 
 void vStatesTask(void *pvParameters);
 void vCheatMode(void *pvParameters);
+void vEnterCheats(void *pvParameters);
+void vPauseMode(void *pvParameters);
 
 #endif // __DEMO_TASKS_H__
