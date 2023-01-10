@@ -25,6 +25,8 @@ TaskHandle_t CheatMode = NULL;
 TaskHandle_t ViewScores = NULL;
 TaskHandle_t StartSingle = NULL;
 
+int highscore = 0;
+
 // Task to just pereodically run the state machine
 void vStatesTask(void *pvParameters)
 {
@@ -183,6 +185,7 @@ void vTaskStartSingle(void *pvParameters)
 
 void vTaskGameOver(void *pvParameters)
 {	
+	
 	vDrawBase();
 
 	TickType_t xLastFrameTime = xTaskGetTickCount();
@@ -200,13 +203,14 @@ void vTaskGameOver(void *pvParameters)
 				vDrawPipes();
 				vDrawGameOver();
 				vDrawScore();
+				vDrawScoreboard();
 				vDrawSpriteAnimations(xLastFrameTime);
 				xLastFrameTime = xTaskGetTickCount();
 
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
 
-					if (buttons.buttons[KEYCODE(ESCAPE)])//tumEventGetMouseLeft() && vCheckReplay())
+					if (tumEventGetMouseLeft() && vCheckReplay()) //buttons.buttons[KEYCODE(ESCAPE)]
 						states_set_state(2);
 						//vBirdReset();
 					if (tumEventGetMouseLeft() && vCheckGameOverBack())
@@ -243,6 +247,7 @@ void vCheatMode(void *pvParameters)
 
 				vDrawPipes();
 				vDrawScore();
+				vSetHighscore();
 
 				vBirdStatus();
 				vBirdMovement();
@@ -254,6 +259,7 @@ void vCheatMode(void *pvParameters)
 					// if we do it with escape, gotta add a text that says "esc to go back"
 					if (buttons.buttons[KEYCODE(ESCAPE)]) //tumEventGetMouseLeft() && vCheckCheatModeBack()
 						states_set_state(1);
+					
 
 					xSemaphoreGive(buttons.lock);
 				}
@@ -263,7 +269,8 @@ void vCheatMode(void *pvParameters)
 }
 
 void vViewScores(void *pvParameters)
-{
+{	
+	
 	while (1)
 	{
 		if (DrawSignal)
@@ -277,6 +284,9 @@ void vViewScores(void *pvParameters)
 				vDrawBackground();
 
 				vDrawCheatMode();
+				
+				printf("HIGHSCORE: %d\n", highscore);
+				
 
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
@@ -289,6 +299,17 @@ void vViewScores(void *pvParameters)
 
 				// vTaskDelay(20);
 			}
+	}
+}
+
+void vSetHighscore(void) {
+
+	bool newHigh = false;
+
+	if (score > highscore){
+
+		highscore = score;
+		newHigh = true;
 	}
 }
 

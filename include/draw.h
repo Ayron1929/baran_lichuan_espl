@@ -18,6 +18,7 @@ void vDrawScore(void);
 void vDrawMenu(void);
 void vDrawSubmenu(void);
 void vDrawStartSingle(void);
+void vDrawScoreboard(void);
 
 extern int score;
 

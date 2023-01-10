@@ -18,12 +18,7 @@
 #include <time.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
-//int score = 0;
-char showScore[10];
-
-int highscore = 0;
-
+#include <SDL2/SDL.h>
 
 void pipesInit(void) {
 
@@ -43,6 +38,8 @@ void pipesInit(void) {
  
 
 void vCheckCollision(void){ //kinda messy but it works
+
+    //SDL_IntersectRect()
 
     if(player1.birdX - 52 < pipe1.x && pipe1.x < player1.birdX + 50){
 

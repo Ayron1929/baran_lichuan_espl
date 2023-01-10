@@ -23,6 +23,7 @@
 #define SINGLE_START_FILENAME "message.png"
 #define EXIT_FILENAME "Exit.png"
 #define GAME_OVER_FILENAME "gameover.png"
+#define SCOREBOARD_FILENAME "scoreboard.png"
 
 #define LOGO_FILENAME "logo.png"
 #define BACKGROUND_FILENAME "background-day.png"
@@ -49,6 +50,7 @@ image_handle_t start_single_image = NULL;
 image_handle_t get_ready_image = NULL;
 image_handle_t quit_image = NULL;
 image_handle_t game_over_image = NULL;
+image_handle_t scoreboard_image = NULL;
 
 image_handle_t pipe_1 = NULL;
 image_handle_t pipe_2 = NULL;
@@ -65,6 +67,17 @@ image_handle_t six = NULL;
 image_handle_t seven = NULL;
 image_handle_t eight = NULL;
 image_handle_t nine = NULL;
+
+image_handle_t small_zero = NULL;
+image_handle_t small_one = NULL;
+image_handle_t small_two = NULL;
+image_handle_t small_three = NULL;
+image_handle_t small_four = NULL;
+image_handle_t small_five = NULL;
+image_handle_t small_six = NULL;
+image_handle_t small_seven = NULL;
+image_handle_t small_eight = NULL;
+image_handle_t small_nine = NULL;
 
 spritesheet_handle_t bird_spritesheet = NULL;
 spritesheet_handle_t base_spritesheet = NULL;
@@ -187,9 +200,9 @@ void vDrawSubmenu(void)
 
 void vDrawGameOver(void)
 {
-	game_over_image = tumDrawLoadImage(GAME_OVER_FILENAME);
-	tumDrawSetLoadedImageScale(game_over_image, 1.5);
-	checkDraw(tumDrawLoadedImage(game_over_image, SCREEN_WIDTH / 2 - tumDrawGetLoadedImageWidth(game_over_image) / 2, SCREEN_HEIGHT / 4 - tumDrawGetLoadedImageHeight(game_over_image) / 2), __FUNCTION__);
+	scoreboard_image = tumDrawLoadImage(SCOREBOARD_FILENAME);
+	tumDrawSetLoadedImageScale(scoreboard_image, 1.3);
+	checkDraw(tumDrawLoadedImage(scoreboard_image, SCREEN_WIDTH / 2 - tumDrawGetLoadedImageWidth(scoreboard_image) / 2, SCREEN_HEIGHT / 2.5 - tumDrawGetLoadedImageHeight(scoreboard_image) / 2), __FUNCTION__);
 
 	GetSize();
 
@@ -686,5 +699,185 @@ void vDrawScore(void)
 		default:
 			break;
 		}
+	}
+}
+
+void vDrawScoreboard(void) {
+
+	//Add new sign if neew highscore (bool newHigh)
+	vSetHighscore();
+
+	if (small_zero == NULL)
+	{
+		small_zero = tumDrawLoadImage(ZERO_FILENAME);
+		tumDrawSetLoadedImageScale(small_zero,0.8);
+	}
+	if (small_one == NULL)
+	{
+		small_one = tumDrawLoadImage(ONE_FILENAME);
+		tumDrawSetLoadedImageScale(small_one,0.8);
+	}
+	if (small_two == NULL)
+	{
+		small_two = tumDrawLoadImage(TWO_FILENAME);
+		tumDrawSetLoadedImageScale(small_two,0.8);
+	}
+	if (small_three == NULL)
+	{
+		small_three = tumDrawLoadImage(THREE_FILENAME);
+		tumDrawSetLoadedImageScale(small_three,0.8);
+	}
+	if (small_four == NULL)
+	{
+		small_four = tumDrawLoadImage(FOUR_FILENAME);
+		tumDrawSetLoadedImageScale(small_four,0.8);
+	}
+	if (small_five == NULL)
+	{
+		small_five = tumDrawLoadImage(FIVE_FILENAME);
+		tumDrawSetLoadedImageScale(small_five,0.8);
+	}
+	if (small_six == NULL)
+	{
+		small_six = tumDrawLoadImage(SIX_FILENAME);
+		tumDrawSetLoadedImageScale(small_six,0.8);
+	}
+	if (small_seven == NULL)
+	{
+		small_seven = tumDrawLoadImage(SEVEN_FILENAME);
+		tumDrawSetLoadedImageScale(small_seven,0.8);
+	}
+	if (small_eight == NULL)
+	{
+		small_eight = tumDrawLoadImage(EIGHT_FILENAME);
+		tumDrawSetLoadedImageScale(small_eight,0.8);
+	}
+	if (small_nine == NULL)
+	{
+		small_nine = tumDrawLoadImage(NINE_FILENAME);
+		tumDrawSetLoadedImageScale(small_nine,0.8);
+	}
+
+
+	int digit1 = highscore % 10;
+	int digit10 = ((highscore - digit1) / 10) % 10;
+	int digit100 = ((highscore - 10 * digit10 - digit1) / 100) % 10;
+
+	
+
+	switch (digit1)
+	{
+		case 0:
+			tumDrawLoadedImage(small_zero, 325, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 1:
+			tumDrawLoadedImage(small_one, 325, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 2:
+			tumDrawLoadedImage(small_two, 325, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 3:
+			tumDrawLoadedImage(small_three, 325, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 4:
+			tumDrawLoadedImage(small_four, 325, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 5:
+			tumDrawLoadedImage(small_five, 325, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 6:
+			tumDrawLoadedImage(small_six, 325, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 7:
+			tumDrawLoadedImage(small_seven, 325, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 8:
+			tumDrawLoadedImage(small_eight, 325, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 9:
+			tumDrawLoadedImage(small_nine, 325, SCREEN_HEIGHT / 2 - 70);
+			break;
+		default:
+			break;
+
+	}
+
+	if (highscore >= 10)
+	{
+		switch (digit10)
+		{
+		case 0:
+			tumDrawLoadedImage(small_zero, 305, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 1:
+			tumDrawLoadedImage(small_one, 305, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 2:
+			tumDrawLoadedImage(small_two, 305, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 3:
+			tumDrawLoadedImage(small_three, 305, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 4:
+			tumDrawLoadedImage(small_four, 305, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 5:
+			tumDrawLoadedImage(small_five, 305, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 6:
+			tumDrawLoadedImage(small_six, 305, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 7:
+			tumDrawLoadedImage(small_seven, 305, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 8:
+			tumDrawLoadedImage(small_eight, 305, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 9:
+			tumDrawLoadedImage(small_nine, 305, SCREEN_HEIGHT / 2 - 70);
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (highscore >= 100)
+	{
+		switch (digit100)
+		{
+		case 0:
+			tumDrawLoadedImage(small_zero, 285, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 1:
+			tumDrawLoadedImage(small_one, 285, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 2:
+			tumDrawLoadedImage(small_two, 285, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 3:
+			tumDrawLoadedImage(small_three, 285, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 4:
+			tumDrawLoadedImage(small_four, 285, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 5:
+			tumDrawLoadedImage(small_five, 285, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 6:
+			tumDrawLoadedImage(small_six, 285, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 7:
+			tumDrawLoadedImage(small_seven, 285, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 8:
+			tumDrawLoadedImage(small_eight, 285, SCREEN_HEIGHT / 2 - 70);
+			break;
+		case 9:
+			tumDrawLoadedImage(small_nine, 285, SCREEN_HEIGHT / 2 - 70);
+			break;
+		default:
+			break;
+		}
+
 	}
 }

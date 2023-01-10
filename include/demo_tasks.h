@@ -3,6 +3,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include <stdbool.h>
 
 extern TaskHandle_t DemoTask1;
 extern TaskHandle_t DemoTask2;
@@ -19,6 +20,10 @@ int createTasks(void);
 void deleteTasks(void);
 void vStatesTask(void *pvParameters);
 void vCheatMode(void *pvParameters);
+
+void vSetHighscore(void);
+extern int highscore;
+extern bool newHigh;
 
 
 #endif // __DEMO_TASKS_H__
