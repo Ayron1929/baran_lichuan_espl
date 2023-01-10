@@ -882,34 +882,34 @@ void vDrawScoreboard(void) {
 	switch (dig1)
 	{
 		case 0:
-			tumDrawLoadedImage(small_zero, 325, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_zero, 325, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 1:
-			tumDrawLoadedImage(small_one, 325, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_one, 325, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 2:
-			tumDrawLoadedImage(small_two, 325, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_two, 325, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 3:
-			tumDrawLoadedImage(small_three, 325, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_three, 325, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 4:
-			tumDrawLoadedImage(small_four, 325, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_four, 325, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 5:
-			tumDrawLoadedImage(small_five, 325, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_five, 325, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 6:
-			tumDrawLoadedImage(small_six, 325, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_six, 325, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 7:
-			tumDrawLoadedImage(small_seven, 325, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_seven, 325, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 8:
-			tumDrawLoadedImage(small_eight, 325, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_eight, 325, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 9:
-			tumDrawLoadedImage(small_nine, 325, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_nine, 325, SCREEN_HEIGHT / 2 - 123);
 			break;
 		default:
 			break;
@@ -921,34 +921,34 @@ void vDrawScoreboard(void) {
 		switch (dig10)
 		{
 		case 0:
-			tumDrawLoadedImage(small_zero, 305, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_zero, 305, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 1:
-			tumDrawLoadedImage(small_one, 305, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_one, 305, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 2:
-			tumDrawLoadedImage(small_two, 305, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_two, 305, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 3:
-			tumDrawLoadedImage(small_three, 305, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_three, 305, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 4:
-			tumDrawLoadedImage(small_four, 305, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_four, 305, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 5:
-			tumDrawLoadedImage(small_five, 305, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_five, 305, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 6:
-			tumDrawLoadedImage(small_six, 305, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_six, 305, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 7:
-			tumDrawLoadedImage(small_seven, 305, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_seven, 305, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 8:
-			tumDrawLoadedImage(small_eight, 305, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_eight, 305, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 9:
-			tumDrawLoadedImage(small_nine, 305, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_nine, 305, SCREEN_HEIGHT / 2 - 123);
 			break;
 		default:
 			break;
@@ -960,34 +960,34 @@ void vDrawScoreboard(void) {
 		switch (dig100)
 		{
 		case 0:
-			tumDrawLoadedImage(small_zero, 285, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_zero, 285, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 1:
-			tumDrawLoadedImage(small_one, 285, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_one, 285, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 2:
-			tumDrawLoadedImage(small_two, 285, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_two, 285, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 3:
-			tumDrawLoadedImage(small_three, 285, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_three, 285, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 4:
-			tumDrawLoadedImage(small_four, 285, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_four, 285, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 5:
-			tumDrawLoadedImage(small_five, 285, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_five, 285, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 6:
-			tumDrawLoadedImage(small_six, 285, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_six, 285, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 7:
-			tumDrawLoadedImage(small_seven, 285, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_seven, 285, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 8:
-			tumDrawLoadedImage(small_eight, 285, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_eight, 285, SCREEN_HEIGHT / 2 - 123);
 			break;
 		case 9:
-			tumDrawLoadedImage(small_nine, 285, SCREEN_HEIGHT / 2 - 120);
+			tumDrawLoadedImage(small_nine, 285, SCREEN_HEIGHT / 2 - 123);
 			break;
 		default:
 			break;
