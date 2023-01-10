@@ -105,6 +105,8 @@ char *single_play = "Play";
 int single_play_width, single_play_height;
 static char scores[100];
 int scores_width, scores_height;
+static char high_scores[100];
+int high_scores_width, high_scores_height;
 
 
 void GetMouse(void)
@@ -126,6 +128,7 @@ void GetSize(void)
 	tumGetTextSize(back, &back_width, &back_height);
 	tumGetTextSize(single_play, &single_play_width, &single_play_height);
 	tumGetTextSize(scores, &scores_width, &scores_height);
+	tumGetTextSize(high_scores, &high_scores_width, &high_score_height);
 	
 }
 
@@ -251,6 +254,16 @@ void vDrawCheatMode(void)
 
 	// checkDraw(tumDrawText(back, screen_mid - back_width / 2, SCREEN_HEIGHT * 0.77, Maroon), __FUNCTION__);
 	checkDraw(tumDrawText(single_play, screen_mid - single_play_width / 2, SCREEN_HEIGHT * 0.8, Maroon), __FUNCTION__);
+}
+
+void vDrawHighScores(void)
+{
+	GetSize();
+	sprintf(high_scores, "Your Highest score: %d", highscore);
+
+	checkDraw(tumDrawText((char *)high_scores, screen_mid - high_score_width / 2 - 50, screen_height_mid - high_score_height / 2, Maroon), __FUNCTION__);
+
+	checkDraw(tumDrawText(back, screen_mid - back_width / 2, SCREEN_HEIGHT * 0.77, Maroon), __FUNCTION__);
 }
 
 void vDrawStartSingle(void)
@@ -698,7 +711,7 @@ void vDrawScore(void)
 
 void vDrawScoreboard(void) {
 
-	//Add new sign if neew highscore (bool newHigh)
+	//Add new sign if new highscore (bool newHigh)
 	vSetHighscore();
 
 	if (small_zero == NULL)

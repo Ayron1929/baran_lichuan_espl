@@ -380,7 +380,7 @@ void vViewScores(void *pvParameters)
 
 				vDrawBackground();
 
-				vDrawCheatMode();
+				vDrawHighScores();
 
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
