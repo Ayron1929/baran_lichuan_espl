@@ -19,6 +19,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+struct pipes pipe1, pipe2, pipe3;
 
 void pipesInit(void) {
 

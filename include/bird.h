@@ -3,16 +3,20 @@
 
 #include <stdbool.h>
 struct bird {
+	SemaphoreHandle_t lock;
 	int birdY;
 	int birdX;
 	float birdVelocity;
 	float gravity;
 
-} player1;
+};
+
+extern struct bird player1;
 
 extern bool bBirdAlive;
 extern bool bCollision;
 
+int getBirdX();
 void birdInit(void);
 void vBirdMovement(void);
 void vBirdStatus(void);

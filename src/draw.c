@@ -486,7 +486,7 @@ void vDrawSpriteAnimations(TickType_t xLastFrameTime)
 	if (bBirdAlive == true) {
 		tumDrawAnimationDrawFrame(forward_sequence,
 					  xTaskGetTickCount() - xLastFrameTime,
-					  player1.birdX, player1.birdY);
+					  getBirdX(), player1.birdY);
 	} else {
 		tumDrawLoadedImage(bird_midflap, player1.birdX, player1.birdY);
 	}

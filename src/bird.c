@@ -16,12 +16,24 @@
 #include "pipes.h"
 
 #include <stdbool.h>
+
  
 bool bBirdAlive;
 bool bCollision; //true if collision occured
 
-void birdInit(void){
+struct bird player1;
 
+int getBirdX(){
+	int ret = 0;
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		ret = player1.birdX;
+		xSemaphoreGive(player1.lock);
+	}
+	return ret;
+}
+
+void birdInit(void){
+	player1.lock = xSemaphoreCreateMutex();
 	player1.birdX = SCREEN_WIDTH / 3 - 50;
 	player1.birdY = SCREEN_HEIGHT / 2;
 	player1.birdVelocity = 0.0f;

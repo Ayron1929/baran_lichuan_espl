@@ -9,9 +9,9 @@ struct pipes {
     int count;
 };
 
-struct pipes pipe1;
-struct pipes pipe2;
-struct pipes pipe3;
+extern struct pipes pipe1;
+extern struct pipes pipe2;
+extern struct pipes pipe3;
 
 extern int score;
 void pipesInit(void);
