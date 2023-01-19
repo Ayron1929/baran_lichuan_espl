@@ -1,21 +1,20 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "queue.h"
-
 #include "buttons.h"
 #include "main.h"
 #include "demo_tasks.h"
 #include "TUM_Draw.h"
 #include "TUM_Event.h"
+#include "sm.h"
+#include "game_menu.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "sm.h"
-#include "game_menu.h"
 
-
-
+// functions for state machine
 
 void EnterStartMenu(void *enter_start_menu)
 {
@@ -50,26 +49,15 @@ void EnterSingleStart(void *enter_single_start)
     vTaskResume(StartSingle);
     printf("Enter Single Player\n");
     printf("Run Single Player\n");
-
-    
 }
 void RunSingleStart(void *run_single_start)
 {
 
-    // if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
-    // {
-
-        if (tumEventGetMouseLeft() && vCheckSinglePlay())
-        {
-            vTaskSuspend(StartSingle);
-            vTaskResume(SinglePlayer);
-        }      
-        // xSemaphoreGive(buttons.lock);
-    // }
-
- 
-    
-    
+    if (tumEventGetMouseLeft() && vCheckSinglePlay())
+    {
+        vTaskSuspend(StartSingle);
+        vTaskResume(SinglePlayer);
+    }
 }
 
 void ExitSingleStart(void *eixt_single_start)
@@ -83,7 +71,6 @@ void EnterGameOver(void *enter_game_over)
     vTaskResume(GameOver);
     printf("Enter Game Over\n");
     printf("Run Game Over\n");
-    
 }
 
 void ExitGameOver(void *exit_game_over)
@@ -96,19 +83,16 @@ void EnterCheatMode(void *enter_cheat_mode)
 {
     vTaskResume(StartCheats);
 
-
     printf("Enter Cheat Mode\n");
     printf("Run Cheat Mode\n");
-    
 }
 
 void RunCheatMode(void *run_cheat_mode)
 {
-    if(tumEventGetMouseLeft() && vCheckSinglePlay())
+    if (tumEventGetMouseLeft() && vCheckSinglePlay())
     {
         vTaskSuspend(StartCheats);
         vTaskResume(CheatMode);
-        
     }
 }
 

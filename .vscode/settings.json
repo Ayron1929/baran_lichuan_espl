@@ -14,6 +14,12 @@
         "cstdlib": "c",
         "game_menu.h": "c",
         "draw.h": "c",
-        "async_message_queues.h": "c"
+        "async_message_queues.h": "c",
+        "freertos.h": "c",
+        "asyncio.h": "c",
+        "defines.h": "c",
+        "queue.h": "c",
+        "semphr.h": "c",
+        "task.h": "c"
     }
 }

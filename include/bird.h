@@ -2,13 +2,14 @@
 #define __BIRD_H__
 
 #include <stdbool.h>
-struct bird {
+
+struct bird
+{
 	SemaphoreHandle_t lock;
 	int birdY;
 	int birdX;
 	float birdVelocity;
 	float gravity;
-
 };
 
 extern struct bird player1;
@@ -21,6 +22,5 @@ void birdInit(void);
 void vBirdMovement(void);
 void vBirdStatus(void);
 void vBirdReset(void);
-
 
 #endif
