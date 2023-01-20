@@ -248,9 +248,17 @@ void vEnterCheats(void *pvParameters)
 			{
 				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
 									FETCH_EVENT_NO_GL_CHECK);
+				xGetButtonInput();
 
 				vDrawBackground();
 				vDrawCheatMode();
+
+				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
+				{
+					if(buttons.buttons[KEYCODE(UP)]) score++;
+					if(buttons.buttons[KEYCODE(DOWN)]) score--;
+					xSemaphoreGive(buttons.lock);
+				}
 			}
 	}
 }

@@ -90,6 +90,11 @@ int single_width, single_height, multi_width, cheats_width, cheats_height, high_
 int replay_width, replay_height;
 int screen_mid = SCREEN_WIDTH / 2;
 int screen_height_mid = SCREEN_HEIGHT / 2;
+int single_play_width, single_play_height;
+int scores_width, scores_height;
+int high_scores_width, high_scores_height;
+int updown_width, updown_height;
+
 char *back = "Back";
 char *menu = "Menu";
 char *single = "Single Player";
@@ -97,13 +102,11 @@ char *multi = "Two Players";
 char *cheats = "Cheat Mode";
 char *high_score = "View Scores";
 char *replay = "Replay";
-
 char *single_play = "Play";
-int single_play_width, single_play_height;
+char *up_down = "[UP] or [DOWN]";
+
 static char scores[100];
-int scores_width, scores_height;
 static char high_scores[100];
-int high_scores_width, high_scores_height;
 
 // get mouse coordinates
 void GetMouse(void)
@@ -127,6 +130,7 @@ void GetSize(void)
 	tumGetTextSize(single_play, &single_play_width, &single_play_height);
 	tumGetTextSize(scores, &scores_width, &scores_height);
 	tumGetTextSize(high_scores, &high_scores_width, &high_score_height);
+	tumGetTextSize(up_down, &updown_width, &updown_height);
 }
 
 void checkDraw(unsigned char status, const char *msg)
@@ -221,12 +225,11 @@ void vDrawGameOver(void)
 void vDrawCheatMode(void)
 {
 	GetSize();
-	score = 10;
+
 	sprintf(scores, "Start Scores: %d", score);
 
 	checkDraw(tumDrawText((char *)scores, screen_mid - scores_width / 2, screen_height_mid - scores_height / 2, Maroon), __FUNCTION__);
-
-	// checkDraw(tumDrawText(back, screen_mid - back_width / 2, SCREEN_HEIGHT * 0.77, Maroon), __FUNCTION__);
+	checkDraw(tumDrawText(up_down, screen_mid - updown_width / 2, screen_height_mid - scores_height / 2 + 100, Maroon), __FUNCTION__);
 	checkDraw(tumDrawText(single_play, screen_mid - single_play_width / 2, SCREEN_HEIGHT * 0.8, Maroon), __FUNCTION__);
 }
 
