@@ -253,10 +253,18 @@ void vEnterCheats(void *pvParameters)
 				vDrawBackground();
 				vDrawCheatMode();
 
+				// check usr input for start scores
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
-					if(buttons.buttons[KEYCODE(UP)]) score++;
-					if(buttons.buttons[KEYCODE(DOWN)]) score--;
+					if(buttons.buttons[KEYCODE(UP)]){
+						vTaskDelay(150);
+						if(buttons.buttons[KEYCODE(UP)]) score++;
+					}
+					if(buttons.buttons[KEYCODE(DOWN)]){
+						vTaskDelay(150);
+						if(buttons.buttons[KEYCODE(DOWN)]) score--;
+					}
+					
 					xSemaphoreGive(buttons.lock);
 				}
 			}
