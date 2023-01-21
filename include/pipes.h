@@ -3,10 +3,10 @@
 
 struct pipes { 
     
+    SemaphoreHandle_t lock;
     int x;
     int y;
-    float fPipeVelocity;
-    int count;
+    //int velocity;
 };
 
 extern struct pipes pipe1;
@@ -14,6 +14,9 @@ extern struct pipes pipe2;
 extern struct pipes pipe3;
 
 extern int score;
+int getPipeX(struct pipes pipe);
+int getPipeY(struct pipes pipe);
+int vPipesShift(struct pipes pipe);
 void pipesInit(void);
 void vCheckCollision(void);
 

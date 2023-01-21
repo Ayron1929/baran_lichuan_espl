@@ -28,6 +28,7 @@ void vDrawHighScores(void);
 void vDrawGameOver(void);
 void vDrawCheatMode(void);
 void vDrawHighScores(void);
+void vDrawMedal(void);
 
 void GetMouse(void);
 void GetSize(void);

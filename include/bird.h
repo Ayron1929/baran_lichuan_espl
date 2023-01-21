@@ -3,13 +3,13 @@
 
 #include <stdbool.h>
 
+#define BIRD_X SCREEN_WIDTH / 3 - 50
+#define GRAVITY 1.0f
 struct bird
 {
 	SemaphoreHandle_t lock;
-	int birdY;
-	int birdX;
+	int y;
 	float birdVelocity;
-	float gravity;
 };
 
 extern struct bird player1;
@@ -17,7 +17,7 @@ extern struct bird player1;
 extern bool bBirdAlive;
 extern bool bCollision;
 
-int getBirdX();
+int getBirdY();
 void birdInit(void);
 void vBirdMovement(void);
 void vBirdStatus(void);

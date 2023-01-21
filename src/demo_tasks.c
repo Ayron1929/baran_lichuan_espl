@@ -27,10 +27,9 @@ TaskHandle_t StartSingle = NULL;
 TaskHandle_t StartCheats = NULL;
 TaskHandle_t PauseMode = NULL;
 
-
 int highscore = 0;
 
-// Task to just pereodically run the state machine
+// Task to just periodically run the state machine
 void vStatesTask(void *pvParameters)
 {
 	while (1)
@@ -99,7 +98,7 @@ void vTaskSettings(void *pvParameters)
 // start playing single mode
 void vTaskSingle(void *pvParameters)
 {
-	
+
 	TickType_t xLastFrameTime = xTaskGetTickCount();
 
 	while (1)
@@ -125,7 +124,7 @@ void vTaskSingle(void *pvParameters)
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
 
-					if (player1.birdY == (SCREEN_HEIGHT - 175))
+					if (getBirdY() == (SCREEN_HEIGHT - 175))
 					{
 						// vTaskDelay(500);
 						states_set_state(3);
@@ -184,6 +183,7 @@ void vTaskGameOver(void *pvParameters)
 				xLastFrameTime = xTaskGetTickCount();
 				vDrawGameOver();
 				vDrawScoreboard();
+				vDrawMedal();
 
 				if (tumEventGetMouseLeft() && vCheckReplay())
 				{
@@ -239,7 +239,8 @@ void vPauseMode(void *pvParameters)
 
 void vEnterCheats(void *pvParameters)
 {
-
+	TickType_t last_change = xTaskGetTickCount();
+	int debounceDelay = 150; // 150 ms
 	while (1)
 	{
 		if (DrawSignal)
@@ -253,23 +254,35 @@ void vEnterCheats(void *pvParameters)
 				vDrawBackground();
 				vDrawCheatMode();
 
-				// check usr input for start scores
+				// check user input for start scores
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
-					if(buttons.buttons[KEYCODE(UP)]){
-						vTaskDelay(150);
-						if(buttons.buttons[KEYCODE(UP)]) score++;
+
+					if (buttons.buttons[KEYCODE(UP)])
+					{
+						if (xTaskGetTickCount() - last_change >
+							debounceDelay)
+						{
+							score++;
+							last_change = xTaskGetTickCount();
+						}
 					}
-					if(buttons.buttons[KEYCODE(DOWN)]){
-						vTaskDelay(150);
-						if(buttons.buttons[KEYCODE(DOWN)]) score--;
+					if (buttons.buttons[KEYCODE(DOWN)])
+					{
+						if (xTaskGetTickCount() - last_change >
+							debounceDelay)
+						{
+							score--;
+							last_change = xTaskGetTickCount();
+						}
 					}
-					
+
 					xSemaphoreGive(buttons.lock);
 				}
 			}
 	}
 }
+
 
 // when playing cheat mode
 void vCheatMode(void *pvParameters)

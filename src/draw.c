@@ -38,6 +38,10 @@
 #define SEVEN_FILENAME "7.png"
 #define EIGHT_FILENAME "8.png"
 #define NINE_FILENAME "9.png"
+#define PLAT_MEDAL_FILENAME "plat_medal.png"
+#define GOLD_MEDAL_FILENAME "gold_medal.png"
+#define SILVER_MEDAL_FILENAME "silver_medal.png"
+#define BRONZE_MEDAL_FILENAME "bronze_medal.png"
 
 image_handle_t background_image = NULL;
 image_handle_t base_image = NULL;
@@ -47,6 +51,10 @@ image_handle_t quit_image = NULL;
 image_handle_t game_over_image = NULL;
 image_handle_t flappy_bird_image = NULL;
 image_handle_t scoreboard_image = NULL;
+image_handle_t plat_medal_image = NULL;
+image_handle_t gold_medal_image = NULL;
+image_handle_t silver_medal_image = NULL;
+image_handle_t bronze_medal_image = NULL;
 
 image_handle_t pipe_1 = NULL;
 image_handle_t pipe_2 = NULL;
@@ -82,7 +90,7 @@ sequence_handle_t forward_sequence = NULL;
 sequence_handle_t reverse_sequence = NULL;
 sequence_handle_t base_forward_sequence = NULL;
 
-int score = 0;
+int score = 20;
 int menu_width;
 int menu_height;
 int mouse_x, mouse_y;
@@ -419,21 +427,21 @@ void vDrawBackground(void)
 void vDrawBase(void)
 {
 	char *base_spritesheet_path =
-		tumUtilFindResourcePath("base_spritesheet_optimized.png");
+		tumUtilFindResourcePath("base_spritesheet_24.png");
 
 	image_handle_t base_spritesheet_image =
 		tumDrawLoadImage(base_spritesheet_path);
 
-	base_spritesheet = tumDrawLoadSpritesheet(base_spritesheet_image, 4, 1);
+	base_spritesheet = tumDrawLoadSpritesheet(base_spritesheet_image, 24, 1);
 
 	animation_handle_t base_animation =
 		tumDrawAnimationCreate(base_spritesheet);
 
 	tumDrawAnimationAddSequence(base_animation, "FORWARDS", 0, 0,
-								SPRITE_SEQUENCE_HORIZONTAL_POS, 4);
+								SPRITE_SEQUENCE_HORIZONTAL_POS, 24);
 
 	base_forward_sequence = tumDrawAnimationSequenceInstantiate(
-		base_animation, "FORWARDS", 300);
+		base_animation, "FORWARDS", 1);
 }
 
 void vDrawBird(void)
@@ -471,11 +479,11 @@ void vDrawSpriteAnimations(TickType_t xLastFrameTime)
 	{
 		tumDrawAnimationDrawFrame(forward_sequence,
 								  xTaskGetTickCount() - xLastFrameTime,
-								  getBirdX(), player1.birdY);
+								  BIRD_X, getBirdY());
 	}
 	else
 	{
-		tumDrawLoadedImage(bird_midflap, player1.birdX, player1.birdY);
+		tumDrawLoadedImage(bird_midflap, BIRD_X, getBirdY());
 	}
 
 	if (bBirdAlive == true)
@@ -512,11 +520,11 @@ void vDrawPipes(void)
 	// pipe 1
 	if (bBirdAlive == true)
 	{
-		checkDraw(tumDrawLoadedImage(pipe_1, pipe1.x, pipe1.y),
+		checkDraw(tumDrawLoadedImage(pipe_1, getPipeX(pipe1), getPipeY(pipe1)),
 				  __FUNCTION__);
 		pipe1.x -= 2;
 
-		if (pipe1.x <= -52)
+		if (getPipeX(pipe1) <= -52)
 		{
 			pipe1.x = SCREEN_WIDTH + 116;
 			pipe1.y = -350 + rand() % 310;
@@ -524,17 +532,17 @@ void vDrawPipes(void)
 	}
 	else
 	{ // stops moving when bird is dead
-		checkDraw(tumDrawLoadedImage(pipe_1, pipe1.x, pipe1.y),
+		checkDraw(tumDrawLoadedImage(pipe_1, getPipeX(pipe1), getPipeY(pipe1)),
 				  __FUNCTION__);
 	}
 	// pipe 2
 	if (bBirdAlive == true)
 	{
-		checkDraw(tumDrawLoadedImage(pipe_2, pipe2.x, pipe2.y),
+		checkDraw(tumDrawLoadedImage(pipe_2, getPipeX(pipe2), getPipeY(pipe2)),
 				  __FUNCTION__);
 		pipe2.x -= 2;
 
-		if (pipe2.x <= -52)
+		if (getPipeX(pipe2) <= -52)
 		{
 			pipe2.x = SCREEN_WIDTH + 116;
 			pipe2.y = -350 + rand() % 310;
@@ -542,18 +550,18 @@ void vDrawPipes(void)
 	}
 	else
 	{
-		checkDraw(tumDrawLoadedImage(pipe_2, pipe2.x, pipe2.y),
+		checkDraw(tumDrawLoadedImage(pipe_2, getPipeX(pipe2), getPipeY(pipe2)),
 				  __FUNCTION__);
 	}
 
 	// pipe3
 	if (bBirdAlive == true)
 	{
-		checkDraw(tumDrawLoadedImage(pipe_3, pipe3.x, pipe3.y),
+		checkDraw(tumDrawLoadedImage(pipe_3, getPipeX(pipe3), getPipeY(pipe3)),
 				  __FUNCTION__);
 		pipe3.x -= 2;
 
-		if (pipe3.x <= -52)
+		if (getPipeX(pipe3) <= -52)
 		{
 			pipe3.x = SCREEN_WIDTH + 116;
 			pipe3.y = -350 + rand() % 310;
@@ -561,7 +569,7 @@ void vDrawPipes(void)
 	}
 	else
 	{
-		checkDraw(tumDrawLoadedImage(pipe_3, pipe3.x, pipe3.y),
+		checkDraw(tumDrawLoadedImage(pipe_3, getPipeX(pipe3), getPipeY(pipe3)),
 				  __FUNCTION__);
 	}
 }
@@ -1020,5 +1028,42 @@ void vDrawScoreboard(void)
 		default:
 			break;
 		}
+	}
+}
+
+void vDrawMedal(void){
+
+	if (plat_medal_image == NULL)
+	{
+		plat_medal_image = tumDrawLoadImage(PLAT_MEDAL_FILENAME);
+		tumDrawSetLoadedImageScale(plat_medal_image, 3);
+	}
+	if (gold_medal_image == NULL)
+	{
+		gold_medal_image = tumDrawLoadImage(GOLD_MEDAL_FILENAME);
+		tumDrawSetLoadedImageScale(gold_medal_image, 3);
+	}
+	if (silver_medal_image == NULL)
+	{
+		silver_medal_image = tumDrawLoadImage(SILVER_MEDAL_FILENAME);
+		tumDrawSetLoadedImageScale(silver_medal_image, 3);
+	}
+	if (bronze_medal_image == NULL)
+	{
+		bronze_medal_image = tumDrawLoadImage(BRONZE_MEDAL_FILENAME);
+		tumDrawSetLoadedImageScale(bronze_medal_image, 3);
+	}
+
+	if(score>=10 && score <20) {
+		tumDrawLoadedImage(bronze_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
+	}
+	else if(score>=20 && score <30) {
+		tumDrawLoadedImage(silver_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
+	}
+	else if(score>=30 && score <40) {
+		tumDrawLoadedImage(gold_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
+	}
+	else if(score>= 40) {
+		tumDrawLoadedImage(plat_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
 }

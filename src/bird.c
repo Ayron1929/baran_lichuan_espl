@@ -23,21 +23,21 @@ bool bCollision; //true if collision occured
 
 struct bird player1;
 
-int getBirdX(){
+int getBirdY(){
 	int ret = 0;
 	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
-		ret = player1.birdX;
+		ret = player1.y;
 		xSemaphoreGive(player1.lock);
 	}
 	return ret;
 }
 
 void birdInit(void){
+
 	player1.lock = xSemaphoreCreateMutex();
-	player1.birdX = SCREEN_WIDTH / 3 - 50;
-	player1.birdY = SCREEN_HEIGHT / 2;
+	player1.y = SCREEN_HEIGHT / 2;
 	player1.birdVelocity = 0.0f;
-	player1.gravity = 1.0f;
+
 }
 
 void vBirdStatus(void)
@@ -58,31 +58,31 @@ void vBirdMovement(void)
 
 			tumSoundPlaySample(a3); //wing sound
 			player1.birdVelocity = 0.0f;
-			player1.birdVelocity += -player1.gravity * 9.5f;
-			player1.birdY += player1.birdVelocity;
+			player1.birdVelocity += -GRAVITY * 9.5f;
+			player1.y += player1.birdVelocity;
 
 		} else {
-			player1.birdVelocity += player1.gravity;
-			player1.birdY += player1.birdVelocity;
+			player1.birdVelocity += GRAVITY;
+			player1.y += player1.birdVelocity;
 		}
 	}
 	
-	else{ //if collision occurs fall down
-		if(player1.birdY <= SCREEN_HEIGHT - 185) {
+	//if collision occurs fall down
+	else{ 
+		if(player1.y <= SCREEN_HEIGHT - 185) {
 			
-			player1.birdY += player1.gravity * 12;
+			player1.y += GRAVITY * 12;
 		}
 		else {
-			player1.birdY = SCREEN_HEIGHT - 175;
+			player1.y = SCREEN_HEIGHT - 175;
 		}
 	}
 	
-	  
 }
 
 void vBirdReset(void) {
 
-	player1.birdY = SCREEN_HEIGHT / 2;
+	player1.y = SCREEN_HEIGHT / 2;
 	player1.birdVelocity = 0.0f;
 
 	score = 0;
