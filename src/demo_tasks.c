@@ -183,7 +183,9 @@ void vTaskGameOver(void *pvParameters)
 				xLastFrameTime = xTaskGetTickCount();
 				vDrawGameOver();
 				vDrawScoreboard();
+				vSetHighscore();
 				vDrawMedal();
+				
 
 				if (tumEventGetMouseLeft() && vCheckReplay())
 				{
@@ -350,25 +352,21 @@ void vViewScores(void *pvParameters)
 // renew highest score
 void vSetHighscore(void)
 {
-
-	bool newHigh = false;
-
-	if (score > highscore)
+	if (score >= highscore)
 	{
-
+		vDrawNewHigh();
 		highscore = score;
-		newHigh = true;
 	}
 }
 
 int createTasks(void)
 {
 	xTaskCreate(vTaskGame, "Game", mainGENERIC_STACK_SIZE * 20, NULL,
-				mainGENERIC_PRIORITY + 4, &Game);
+				mainGENERIC_PRIORITY + 1, &Game);
 	xTaskCreate(vTaskSettings, "DemoTask2", mainGENERIC_STACK_SIZE * 2, NULL,
 				mainGENERIC_PRIORITY + 1, &Settings);
 	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 2, NULL,
-				mainGENERIC_PRIORITY + 4, &SinglePlayer);
+				mainGENERIC_PRIORITY + 1, &SinglePlayer);
 	xTaskCreate(vTaskGameOver, "Game OVer", mainGENERIC_STACK_SIZE * 2, NULL,
 				mainGENERIC_PRIORITY + 1, &GameOver);
 	xTaskCreate(vCheatMode, "Cheat Mode", mainGENERIC_STACK_SIZE * 2, NULL,

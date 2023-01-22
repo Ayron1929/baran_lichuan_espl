@@ -42,6 +42,7 @@
 #define GOLD_MEDAL_FILENAME "gold_medal.png"
 #define SILVER_MEDAL_FILENAME "silver_medal.png"
 #define BRONZE_MEDAL_FILENAME "bronze_medal.png"
+#define NEW_HIGH_FILENAME "new_high.png"
 
 image_handle_t background_image = NULL;
 image_handle_t base_image = NULL;
@@ -55,6 +56,7 @@ image_handle_t plat_medal_image = NULL;
 image_handle_t gold_medal_image = NULL;
 image_handle_t silver_medal_image = NULL;
 image_handle_t bronze_medal_image = NULL;
+image_handle_t new_high_image = NULL;
 
 image_handle_t pipe_1 = NULL;
 image_handle_t pipe_2 = NULL;
@@ -90,7 +92,7 @@ sequence_handle_t forward_sequence = NULL;
 sequence_handle_t reverse_sequence = NULL;
 sequence_handle_t base_forward_sequence = NULL;
 
-int score = 20;
+int score = 0;
 int menu_width;
 int menu_height;
 int mouse_x, mouse_y;
@@ -427,21 +429,21 @@ void vDrawBackground(void)
 void vDrawBase(void)
 {
 	char *base_spritesheet_path =
-		tumUtilFindResourcePath("base_spritesheet_24.png");
+		tumUtilFindResourcePath("base_spritesheet_optimized.png");
 
 	image_handle_t base_spritesheet_image =
 		tumDrawLoadImage(base_spritesheet_path);
 
-	base_spritesheet = tumDrawLoadSpritesheet(base_spritesheet_image, 24, 1);
+	base_spritesheet = tumDrawLoadSpritesheet(base_spritesheet_image, 4, 1);
 
 	animation_handle_t base_animation =
 		tumDrawAnimationCreate(base_spritesheet);
 
 	tumDrawAnimationAddSequence(base_animation, "FORWARDS", 0, 0,
-								SPRITE_SEQUENCE_HORIZONTAL_POS, 24);
+								SPRITE_SEQUENCE_HORIZONTAL_POS, 4);
 
 	base_forward_sequence = tumDrawAnimationSequenceInstantiate(
-		base_animation, "FORWARDS", 1);
+		base_animation, "FORWARDS", 250);
 }
 
 void vDrawBird(void)
@@ -741,7 +743,7 @@ void vDrawScoreboard(void)
 {
 
 	// Add new sign if new highscore (bool newHigh)
-	vSetHighscore();
+	//vSetHighscore();
 
 	if (small_zero == NULL)
 	{
@@ -793,11 +795,12 @@ void vDrawScoreboard(void)
 		small_nine = tumDrawLoadImage(NINE_FILENAME);
 		tumDrawSetLoadedImageScale(small_nine, 0.8);
 	}
-
+	//Calculations for highscore
 	int digit1 = highscore % 10;
 	int digit10 = ((highscore - digit1) / 10) % 10;
 	int digit100 = ((highscore - 10 * digit10 - digit1) / 100) % 10;
 
+	//Calculations for score
 	int dig1 = score % 10;
 	int dig10 = ((score - dig1) / 10) % 10;
 	int dig100 = ((score - 10 * dig10 - dig1) / 100) % 10;
@@ -1066,4 +1069,14 @@ void vDrawMedal(void){
 	else if(score>= 40) {
 		tumDrawLoadedImage(plat_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
+}
+
+void vDrawNewHigh(void){
+
+	if(new_high_image == NULL) {
+		new_high_image = tumDrawLoadImage(NEW_HIGH_FILENAME);
+	}
+	tumDrawSetLoadedImageScale(new_high_image, 2);
+	tumDrawLoadedImage(new_high_image, 255, SCREEN_HEIGHT / 2 - 89);
+	
 }

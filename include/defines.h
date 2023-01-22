@@ -6,4 +6,7 @@
 
 #define FPS_FONT "IBMPlexSans-Bold.ttf"
 
+#define BIRD_X SCREEN_WIDTH / 3 - 50
+#define GRAVITY 1.0f
+
 #endif // __DEFINES_H__

@@ -42,7 +42,7 @@ int getPipeY(struct pipes pipe){
 int vPipesShift(struct pipes pipe){
     if(xSemaphoreTake(pipe.lock, portMAX_DELAY) == pdTRUE){
 
-		pipe.x = pipe.x - 2;
+		pipe.x -= 2;
 		xSemaphoreGive(pipe.lock);
     }
     return 0;

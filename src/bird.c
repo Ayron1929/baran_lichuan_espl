@@ -36,7 +36,7 @@ void birdInit(void){
 
 	player1.lock = xSemaphoreCreateMutex();
 	player1.y = SCREEN_HEIGHT / 2;
-	player1.birdVelocity = 0.0f;
+	player1.velocity = 0.0f;
 
 }
 
@@ -52,18 +52,20 @@ void vBirdStatus(void)
 
 
 void vBirdMovement(void)
-{
+{	
+
 	if (bBirdAlive == true) {
-		if((tumEventGetMouseLeft() == true)){ // Gotta add delay
+		if(tumEventGetMouseLeft() == true){ // Gotta add delay
 
 			tumSoundPlaySample(a3); //wing sound
-			player1.birdVelocity = 0.0f;
-			player1.birdVelocity += -GRAVITY * 9.5f;
-			player1.y += player1.birdVelocity;
+			player1.velocity = 0.0f;
+			player1.velocity += -GRAVITY * 9.5f;
+			player1.y += player1.velocity;
+			
 
 		} else {
-			player1.birdVelocity += GRAVITY;
-			player1.y += player1.birdVelocity;
+			player1.velocity += GRAVITY;
+			player1.y += player1.velocity;
 		}
 	}
 	
@@ -83,7 +85,7 @@ void vBirdMovement(void)
 void vBirdReset(void) {
 
 	player1.y = SCREEN_HEIGHT / 2;
-	player1.birdVelocity = 0.0f;
+	player1.velocity = 0.0f;
 
 	score = 0;
 
