@@ -46,7 +46,6 @@
 
 image_handle_t background_image = NULL;
 image_handle_t base_image = NULL;
-image_handle_t base_image2 = NULL;
 image_handle_t start_single_image = NULL;
 image_handle_t quit_image = NULL;
 image_handle_t game_over_image = NULL;
@@ -92,7 +91,6 @@ sequence_handle_t forward_sequence = NULL;
 sequence_handle_t reverse_sequence = NULL;
 sequence_handle_t base_forward_sequence = NULL;
 
-int score = 0;
 int menu_width;
 int menu_height;
 int mouse_x, mouse_y;
@@ -236,7 +234,7 @@ void vDrawCheatMode(void)
 {
 	GetSize();
 
-	sprintf(scores, "Start Scores: %d", score);
+	sprintf(scores, "Start Scores: %d", getScore());
 
 	checkDraw(tumDrawText((char *)scores, screen_mid - scores_width / 2, screen_height_mid - scores_height / 2, Maroon), __FUNCTION__);
 	checkDraw(tumDrawText(up_down, screen_mid - updown_width / 2, screen_height_mid - scores_height / 2 + 100, Maroon), __FUNCTION__);
@@ -246,7 +244,7 @@ void vDrawCheatMode(void)
 void vDrawHighScores(void)
 {
 	GetSize();
-	sprintf(high_scores, "Your Highest score: %d", highscore);
+	sprintf(high_scores, "Your Highest Score: %d", getHighscore());
 
 	checkDraw(tumDrawText((char *)high_scores, screen_mid - high_score_width / 2 - 50, screen_height_mid - high_score_height / 2, Maroon), __FUNCTION__);
 
@@ -453,12 +451,15 @@ void vDrawBird(void)
 		bird_midflap = tumDrawLoadImage(BIRD_MIDFLAP_FILENAME);
 	}
 	tumDrawSetLoadedImageScale(bird_midflap, 1.49);
+
 	char *bird_spritesheet_path =
 		tumUtilFindResourcePath("bird_spritesheet.png");
 
 	image_handle_t bird_spritesheet_image =
 		tumDrawLoadImage(bird_spritesheet_path);
+
 	tumDrawSetLoadedImageScale(bird_spritesheet_image, 1.5);
+	
 	bird_spritesheet = tumDrawLoadSpritesheet(bird_spritesheet_image, 3, 1);
 
 	animation_handle_t bird_animation =
@@ -483,8 +484,7 @@ void vDrawSpriteAnimations(TickType_t xLastFrameTime)
 								  xTaskGetTickCount() - xLastFrameTime,
 								  BIRD_X, getBirdY());
 	}
-	else
-	{
+	else{
 		tumDrawLoadedImage(bird_midflap, BIRD_X, getBirdY());
 	}
 
@@ -524,12 +524,11 @@ void vDrawPipes(void)
 	{
 		checkDraw(tumDrawLoadedImage(pipe_1, getPipeX(pipe1), getPipeY(pipe1)),
 				  __FUNCTION__);
-		pipe1.x -= 2;
+		vPipesShift(p1);
 
 		if (getPipeX(pipe1) <= -52)
 		{
-			pipe1.x = SCREEN_WIDTH + 116;
-			pipe1.y = -350 + rand() % 310;
+			vPipesReset(p1);
 		}
 	}
 	else
@@ -542,12 +541,11 @@ void vDrawPipes(void)
 	{
 		checkDraw(tumDrawLoadedImage(pipe_2, getPipeX(pipe2), getPipeY(pipe2)),
 				  __FUNCTION__);
-		pipe2.x -= 2;
+		vPipesShift(p2);
 
 		if (getPipeX(pipe2) <= -52)
 		{
-			pipe2.x = SCREEN_WIDTH + 116;
-			pipe2.y = -350 + rand() % 310;
+			vPipesReset(p2);
 		}
 	}
 	else
@@ -561,12 +559,11 @@ void vDrawPipes(void)
 	{
 		checkDraw(tumDrawLoadedImage(pipe_3, getPipeX(pipe3), getPipeY(pipe3)),
 				  __FUNCTION__);
-		pipe3.x -= 2;
+		vPipesShift(p3);
 
 		if (getPipeX(pipe3) <= -52)
 		{
-			pipe3.x = SCREEN_WIDTH + 116;
-			pipe3.y = -350 + rand() % 310;
+			vPipesReset(p3);
 		}
 	}
 	else
@@ -579,9 +576,9 @@ void vDrawScore(void)
 {
 	countScore();
 
-	int digit1 = score % 10;
-	int digit10 = ((score - digit1) / 10) % 10;
-	int digit100 = ((score - 10 * digit10 - digit1) / 100) % 10;
+	int digit1 = getScore() % 10;
+	int digit10 = ((getScore() - digit1) / 10) % 10;
+	int digit100 = ((getScore() - 10 * digit10 - digit1) / 100) % 10;
 
 	if (zero == NULL)
 	{
@@ -660,7 +657,7 @@ void vDrawScore(void)
 		break;
 	}
 
-	if (score >= 10)
+	if (getScore() >= 10)
 	{
 		switch (digit10)
 		{
@@ -699,7 +696,7 @@ void vDrawScore(void)
 		}
 	}
 
-	if (score >= 100)
+	if (getScore() >= 100)
 	{
 		switch (digit100)
 		{
@@ -743,7 +740,7 @@ void vDrawScoreboard(void)
 {
 
 	// Add new sign if new highscore (bool newHigh)
-	//vSetHighscore();
+	// vSetHighscore();
 
 	if (small_zero == NULL)
 	{
@@ -795,15 +792,16 @@ void vDrawScoreboard(void)
 		small_nine = tumDrawLoadImage(NINE_FILENAME);
 		tumDrawSetLoadedImageScale(small_nine, 0.8);
 	}
-	//Calculations for highscore
-	int digit1 = highscore % 10;
-	int digit10 = ((highscore - digit1) / 10) % 10;
-	int digit100 = ((highscore - 10 * digit10 - digit1) / 100) % 10;
+	// Calculations for highscore
+	int digit1 = getHighscore() % 10;
+	int digit10 = ((getHighscore() - digit1) / 10) % 10;
+	int digit100 = ((getHighscore() - 10 * digit10 - digit1) / 100) % 10;
 
-	//Calculations for score
-	int dig1 = score % 10;
-	int dig10 = ((score - dig1) / 10) % 10;
-	int dig100 = ((score - 10 * dig10 - dig1) / 100) % 10;
+	// Calculations for player1.score
+
+	int dig1 = getScore() % 10;
+	int dig10 = ((getScore() - dig1) / 10) % 10;
+	int dig100 = ((getScore() - 10 * dig10 - dig1) / 100) % 10;
 
 	switch (digit1)
 	{
@@ -841,7 +839,7 @@ void vDrawScoreboard(void)
 		break;
 	}
 
-	if (highscore >= 10)
+	if (getHighscore() >= 10)
 	{
 		switch (digit10)
 		{
@@ -880,7 +878,7 @@ void vDrawScoreboard(void)
 		}
 	}
 
-	if (highscore >= 100)
+	if (getHighscore() >= 100)
 	{
 		switch (digit100)
 		{
@@ -955,7 +953,7 @@ void vDrawScoreboard(void)
 		break;
 	}
 
-	if (score >= 10)
+	if (getScore() >= 10)
 	{
 		switch (dig10)
 		{
@@ -994,7 +992,7 @@ void vDrawScoreboard(void)
 		}
 	}
 
-	if (score >= 100)
+	if (getScore() >= 100)
 	{
 		switch (dig100)
 		{
@@ -1034,7 +1032,8 @@ void vDrawScoreboard(void)
 	}
 }
 
-void vDrawMedal(void){
+void vDrawMedal(void)
+{
 
 	if (plat_medal_image == NULL)
 	{
@@ -1057,26 +1056,31 @@ void vDrawMedal(void){
 		tumDrawSetLoadedImageScale(bronze_medal_image, 3);
 	}
 
-	if(score>=10 && score <20) {
+	if (getScore() >= 10 && getScore() < 20)
+	{
 		tumDrawLoadedImage(bronze_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
-	else if(score>=20 && score <30) {
+	else if (getScore() >= 20 && getScore() < 30)
+	{
 		tumDrawLoadedImage(silver_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
-	else if(score>=30 && score <40) {
+	else if (getScore() >= 30 && getScore() < 40)
+	{
 		tumDrawLoadedImage(gold_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
-	else if(score>= 40) {
+	else if (getScore() >= 40)
+	{
 		tumDrawLoadedImage(plat_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
 }
 
-void vDrawNewHigh(void){
+void vDrawNewHigh(void)
+{
 
-	if(new_high_image == NULL) {
+	if (new_high_image == NULL)
+	{
 		new_high_image = tumDrawLoadImage(NEW_HIGH_FILENAME);
 	}
 	tumDrawSetLoadedImageScale(new_high_image, 2);
 	tumDrawLoadedImage(new_high_image, 255, SCREEN_HEIGHT / 2 - 89);
-	
 }

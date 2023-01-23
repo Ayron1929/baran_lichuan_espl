@@ -22,6 +22,7 @@ bool bBirdAlive;
 bool bCollision; //true if collision occured
 
 struct bird player1;
+struct bird *b1 = &player1;
 
 int getBirdY(){
 	int ret = 0;
@@ -30,6 +31,45 @@ int getBirdY(){
 		xSemaphoreGive(player1.lock);
 	}
 	return ret;
+}
+
+int getScore(){
+	int ret = 0;
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		ret = player1.score;
+		xSemaphoreGive(player1.lock);
+	}
+	return ret;
+}
+
+void incrementScore(void){
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		player1.score++;
+		xSemaphoreGive(player1.lock);
+	}
+}
+
+void decrementScore(void){
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		player1.score--;
+		xSemaphoreGive(player1.lock);
+	}
+}
+
+int getHighscore(){
+	int ret = 0;
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		ret = player1.highscore;
+		xSemaphoreGive(player1.lock);
+	}
+	return ret;
+}
+
+void setHighscore(int score){
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		player1.highscore = score;
+		xSemaphoreGive(player1.lock);
+	}
 }
 
 void birdInit(void){
@@ -84,12 +124,43 @@ void vBirdMovement(void)
 
 void vBirdReset(void) {
 
-	player1.y = SCREEN_HEIGHT / 2;
-	player1.velocity = 0.0f;
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
 
-	score = 0;
 
-	bCollision = false;
-	pipesInit();
+		player1.y = SCREEN_HEIGHT / 2;
+		player1.velocity = 0.0f;
+		player1.score = 0;
 
+		bCollision = false;
+		pipesInit();
+
+		xSemaphoreGive(player1.lock);
+	}
+
+}
+
+void countScore(void)
+{
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		if (bBirdAlive == true)
+		{
+
+			if (getPipeX(pipe1) == BIRD_X - 26)
+			{
+				tumSoundPlaySample(a4);
+				incrementScore();
+			}
+			if (getPipeX(pipe2) == BIRD_X - 26)
+			{
+				tumSoundPlaySample(a4);
+				incrementScore();
+			}
+			if (getPipeX(pipe3) == BIRD_X - 26)
+			{
+				tumSoundPlaySample(a4);
+				incrementScore();
+			}
+		}
+		xSemaphoreGive(player1.lock);
+	}
 }

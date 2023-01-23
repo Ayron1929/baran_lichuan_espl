@@ -27,7 +27,6 @@ TaskHandle_t StartSingle = NULL;
 TaskHandle_t StartCheats = NULL;
 TaskHandle_t PauseMode = NULL;
 
-int highscore = 0;
 
 // Task to just periodically run the state machine
 void vStatesTask(void *pvParameters)
@@ -126,7 +125,7 @@ void vTaskSingle(void *pvParameters)
 
 					if (getBirdY() == (SCREEN_HEIGHT - 175))
 					{
-						// vTaskDelay(500);
+					
 						states_set_state(3);
 					}
 
@@ -205,7 +204,7 @@ void vTaskGameOver(void *pvParameters)
 // when game stops
 void vPauseMode(void *pvParameters)
 {
-	int pause = 0;
+	//int pause = 0;
 
 	TickType_t xLastFrameTime = xTaskGetTickCount();
 
@@ -265,7 +264,7 @@ void vEnterCheats(void *pvParameters)
 						if (xTaskGetTickCount() - last_change >
 							debounceDelay)
 						{
-							score++;
+							incrementScore();
 							last_change = xTaskGetTickCount();
 						}
 					}
@@ -274,7 +273,7 @@ void vEnterCheats(void *pvParameters)
 						if (xTaskGetTickCount() - last_change >
 							debounceDelay)
 						{
-							score--;
+							decrementScore();
 							last_change = xTaskGetTickCount();
 						}
 					}
@@ -352,10 +351,10 @@ void vViewScores(void *pvParameters)
 // renew highest score
 void vSetHighscore(void)
 {
-	if (score >= highscore)
+	if (getScore() >= getHighscore())
 	{
 		vDrawNewHigh();
-		highscore = score;
+		setHighscore(getScore());
 	}
 }
 

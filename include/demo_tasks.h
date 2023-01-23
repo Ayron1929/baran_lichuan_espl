@@ -15,7 +15,7 @@ extern TaskHandle_t StartSingle;
 extern TaskHandle_t StartCheats;
 extern TaskHandle_t PauseMode;
 
-extern int highscore;
+//extern int highscore;
 
 void vStatesTask(void *pvParameters);
 void vTaskGame(void *pvParameters);
