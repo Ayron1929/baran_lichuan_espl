@@ -8,5 +8,10 @@
 
 #define BIRD_X SCREEN_WIDTH / 3 - 50
 #define GRAVITY 1.0f
+#define PIPE_WIDTH 52
+#define PIPE_HEIGHT 400
+#define PIPE_GAP 200
+#define BASE_HEIGHT 175
+#define BIRD_IMAGE_HEIGHT 34
 
 #endif // __DEFINES_H__
