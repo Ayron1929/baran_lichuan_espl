@@ -71,21 +71,6 @@ void vBirdStatus(void)
 	}
 }
 
-void vBirdFreeFall(void){
-	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
-		
-		if(player1.y <= SCREEN_HEIGHT - 185) 
-		{
-			player1.y += GRAVITY * 12;
-		}
-		else {
-			player1.y = SCREEN_HEIGHT - 175;
-		}
-		xSemaphoreGive(player1.lock);
-	}
-
-}
-
 void vBirdJump(void){
 	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
 
@@ -102,6 +87,21 @@ void vBirdFall(void){
 		player1.y += player1.velocity;
 		xSemaphoreGive(player1.lock);
 	}
+}
+
+void vBirdFreeFall(void){
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		
+		if(player1.y <= SCREEN_HEIGHT - 185) 
+		{
+			player1.y += GRAVITY * 12;
+		}
+		else {
+			player1.y = SCREEN_HEIGHT - BASE_HEIGHT ;
+		}
+		xSemaphoreGive(player1.lock);
+	}
+
 }
 
 void vBirdMovement(void)
@@ -171,7 +171,8 @@ void vSetHighscore(void)
 {
 	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
 		if (getScore() >= getHighscore())
-		{
+		{	
+			
 			vDrawNewHigh();
 			b1->highscore = getScore();
 		}

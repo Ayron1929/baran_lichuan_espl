@@ -142,10 +142,6 @@ void vTaskSingle(void *pvParameters)
 void vTaskStartSingle(void *pvParameters)
 {
 
-	vDrawBird();
-	//birdInit();
-	pipesInit();
-
 	while (1)
 	{
 		if (DrawSignal)
@@ -185,7 +181,7 @@ void vTaskGameOver(void *pvParameters)
 				vSetHighscore();
 				
 
-				if (tumEventGetMouseLeft() && vCheckReplay())
+				if (buttons.buttons[KEYCODE(R)]) //tumEventGetMouseLeft() && vCheckReplay()
 				{
 					vBirdReset();
 					states_set_state(2);
@@ -343,7 +339,7 @@ void vViewScores(void *pvParameters)
 int createTasks(void)
 {
 	xTaskCreate(vTaskGame, "Game", mainGENERIC_STACK_SIZE * 20, NULL,
-				mainGENERIC_PRIORITY + 4, &Game);
+				mainGENERIC_PRIORITY + 1, &Game);
 	xTaskCreate(vTaskSettings, "DemoTask2", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &Settings);
 	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 20, NULL,

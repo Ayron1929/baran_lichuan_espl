@@ -95,16 +95,16 @@ void vPipeMovement(void)
         vPipesShift(p2);
         vPipesShift(p3);
 
-        if (getPipeX(pipe1) <= -52)
+        if (getPipeX(pipe1) <= -PIPE_WIDTH)
         {
             vPipesReset(p1);
         }
-        if (getPipeX(pipe2) <= -52)
+        if (getPipeX(pipe2) <= -PIPE_WIDTH)
         {
             vPipesReset(p2);
         }
 
-        if (getPipeX(pipe3) <= -52)
+        if (getPipeX(pipe3) <= -PIPE_WIDTH)
         {
             vPipesReset(p3);
         }
@@ -114,41 +114,39 @@ void vPipeMovement(void)
 void vCheckCollision(void)
 { //Almost pixel perfect
 
-    if (BIRD_X - 52 < getPipeX(pipe1) && getPipeX(pipe1) < BIRD_X + 50)
+    if (BIRD_X - PIPE_WIDTH < getPipeX(pipe1) && getPipeX(pipe1) < BIRD_X + PIPE_WIDTH - 2)
     {
 
-        if (getBirdY() < getPipeY(pipe1) + 400 || getBirdY() > getPipeY(pipe1) + 600 - 36)
+        if (getBirdY() < getPipeY(pipe1) + PIPE_HEIGHT || getBirdY() > getPipeY(pipe1) + PIPE_HEIGHT + PIPE_GAP - BIRD_IMAGE_HEIGHT -2)
         {
 
             tumSoundPlaySample(b3); // hit sound
             bCollision = true;
         }
     }
-    if (BIRD_X - 52 < getPipeX(pipe2) && getPipeX(pipe2) < BIRD_X + 50)
+    if (BIRD_X - PIPE_WIDTH < getPipeX(pipe2) && getPipeX(pipe2) < BIRD_X + PIPE_WIDTH - 2)
     {
 
-        if (getBirdY() < getPipeY(pipe2) + 400 || getBirdY() > getPipeY(pipe2) + 600 - 36)
+        if (getBirdY() < getPipeY(pipe2) + PIPE_HEIGHT || getBirdY() > getPipeY(pipe2) + PIPE_HEIGHT + PIPE_GAP - BIRD_IMAGE_HEIGHT -2)
         {
 
             tumSoundPlaySample(b3); // hit sound
             bCollision = true;
         }
     }
-    if (BIRD_X - 52 < getPipeX(pipe3) && getPipeX(pipe3) < BIRD_X + 50)
+    if (BIRD_X - PIPE_WIDTH < getPipeX(pipe3) && getPipeX(pipe3) < BIRD_X + PIPE_WIDTH - 2)
     {
 
-        if (getBirdY() < getPipeY(pipe3) + 400 || getBirdY() > getPipeY(pipe3) + 600 - 36)
+        if (getBirdY() < getPipeY(pipe3) + PIPE_HEIGHT || getBirdY() > getPipeY(pipe3) + PIPE_HEIGHT + PIPE_GAP - BIRD_IMAGE_HEIGHT -2)
         {
 
             tumSoundPlaySample(b3); // hit sound
             bCollision = true;
         }
     }
-    if (getBirdY() > SCREEN_HEIGHT - 175 || getBirdY() < 0)
+    if (getBirdY() > SCREEN_HEIGHT - BASE_HEIGHT || getBirdY() < 0)
     {
         tumSoundPlaySample(a5);
         bCollision = true;
     }
 }
-
-
