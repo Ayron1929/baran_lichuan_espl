@@ -92,7 +92,6 @@ sequence_handle_t forward_sequence = NULL;
 sequence_handle_t reverse_sequence = NULL;
 sequence_handle_t base_forward_sequence = NULL;
 
-int score = 0;
 int menu_width;
 int menu_height;
 int mouse_x, mouse_y;
@@ -236,7 +235,7 @@ void vDrawCheatMode(void)
 {
 	GetSize();
 
-	sprintf(scores, "Start Scores: %d", score);
+	sprintf(scores, "Start Scores: %d", getScore());
 
 	checkDraw(tumDrawText((char *)scores, screen_mid - scores_width / 2, screen_height_mid - scores_height / 2, Maroon), __FUNCTION__);
 	checkDraw(tumDrawText(up_down, screen_mid - updown_width / 2, screen_height_mid - scores_height / 2 + 100, Maroon), __FUNCTION__);
@@ -246,7 +245,7 @@ void vDrawCheatMode(void)
 void vDrawHighScores(void)
 {
 	GetSize();
-	sprintf(high_scores, "Your Highest score: %d", highscore);
+	sprintf(high_scores, "Your Highest score: %d", getHighscore());
 
 	checkDraw(tumDrawText((char *)high_scores, screen_mid - high_score_width / 2 - 50, screen_height_mid - high_score_height / 2, Maroon), __FUNCTION__);
 
@@ -526,13 +525,14 @@ void vDrawPipes(void)
 	checkDraw(tumDrawLoadedImage(pipe_3, getPipeX(pipe3), getPipeY(pipe3)),
 				  __FUNCTION__);
 }
+
 void vDrawScore(void)
 {
 	countScore();
 
-	int digit1 = score % 10;
-	int digit10 = ((score - digit1) / 10) % 10;
-	int digit100 = ((score - 10 * digit10 - digit1) / 100) % 10;
+	int digit1 = getScore() % 10;
+	int digit10 = ((getScore() - digit1) / 10) % 10;
+	int digit100 = ((getScore() - 10 * digit10 - digit1) / 100) % 10;
 
 	if (zero == NULL)
 	{
@@ -611,7 +611,7 @@ void vDrawScore(void)
 		break;
 	}
 
-	if (score >= 10)
+	if (getScore() >= 10)
 	{
 		switch (digit10)
 		{
@@ -650,7 +650,7 @@ void vDrawScore(void)
 		}
 	}
 
-	if (score >= 100)
+	if (getScore() >= 100)
 	{
 		switch (digit100)
 		{
@@ -747,14 +747,14 @@ void vDrawScoreboard(void)
 		tumDrawSetLoadedImageScale(small_nine, 0.8);
 	}
 	//Calculations for highscore
-	int digit1 = highscore % 10;
-	int digit10 = ((highscore - digit1) / 10) % 10;
-	int digit100 = ((highscore - 10 * digit10 - digit1) / 100) % 10;
+	int digit1 = getHighscore() % 10;
+	int digit10 = ((getHighscore() - digit1) / 10) % 10;
+	int digit100 = ((getHighscore() - 10 * digit10 - digit1) / 100) % 10;
 
 	//Calculations for score
-	int dig1 = score % 10;
-	int dig10 = ((score - dig1) / 10) % 10;
-	int dig100 = ((score - 10 * dig10 - dig1) / 100) % 10;
+	int dig1 = getScore() % 10;
+	int dig10 = ((getScore() - dig1) / 10) % 10;
+	int dig100 = ((getScore() - 10 * dig10 - dig1) / 100) % 10;
 
 	switch (digit1)
 	{
@@ -792,7 +792,7 @@ void vDrawScoreboard(void)
 		break;
 	}
 
-	if (highscore >= 10)
+	if (getHighscore() >= 10)
 	{
 		switch (digit10)
 		{
@@ -831,7 +831,7 @@ void vDrawScoreboard(void)
 		}
 	}
 
-	if (highscore >= 100)
+	if (getHighscore() >= 100)
 	{
 		switch (digit100)
 		{
@@ -906,7 +906,7 @@ void vDrawScoreboard(void)
 		break;
 	}
 
-	if (score >= 10)
+	if (getScore() >= 10)
 	{
 		switch (dig10)
 		{
@@ -945,7 +945,7 @@ void vDrawScoreboard(void)
 		}
 	}
 
-	if (score >= 100)
+	if (getScore() >= 100)
 	{
 		switch (dig100)
 		{
@@ -1008,16 +1008,16 @@ void vDrawMedal(void){
 		tumDrawSetLoadedImageScale(bronze_medal_image, 3);
 	}
 
-	if(score>=10 && score <20) {
+	if(getScore() >=10 && getScore() <20) {
 		tumDrawLoadedImage(bronze_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
-	else if(score>=20 && score <30) {
+	else if(getScore()>=20 && getScore() <30) {
 		tumDrawLoadedImage(silver_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
-	else if(score>=30 && score <40) {
+	else if(getScore()>=30 && getScore() <40) {
 		tumDrawLoadedImage(gold_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
-	else if(score>= 40) {
+	else if(getScore()>= 40) {
 		tumDrawLoadedImage(plat_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
 }

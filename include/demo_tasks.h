@@ -15,8 +15,6 @@ extern TaskHandle_t StartSingle;
 extern TaskHandle_t StartCheats;
 extern TaskHandle_t PauseMode;
 
-extern int highscore;
-
 void vStatesTask(void *pvParameters);
 void vTaskGame(void *pvParameters);
 void vTaskSettings(void *pvParameters);
@@ -30,7 +28,6 @@ void vViewScores(void *pvParameters);
 
 int createTasks(void);
 void deleteTasks(void);
-void vSetHighscore(void);
 
 
 #endif // __DEMO_TASKS_H__

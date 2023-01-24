@@ -8,5 +8,6 @@
 
 #define BIRD_X SCREEN_WIDTH / 3 - 50
 #define GRAVITY 1.0f
+#define PIPE_WIDTH 52
 
 #endif // __DEFINES_H__

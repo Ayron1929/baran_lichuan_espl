@@ -27,8 +27,6 @@ TaskHandle_t StartSingle = NULL;
 TaskHandle_t StartCheats = NULL;
 TaskHandle_t PauseMode = NULL;
 
-int highscore = 0;
-
 // Task to just periodically run the state machine
 void vStatesTask(void *pvParameters)
 {
@@ -145,7 +143,7 @@ void vTaskStartSingle(void *pvParameters)
 {
 
 	vDrawBird();
-	birdInit();
+	//birdInit();
 	pipesInit();
 
 	while (1)
@@ -183,8 +181,8 @@ void vTaskGameOver(void *pvParameters)
 				xLastFrameTime = xTaskGetTickCount();
 				vDrawGameOver();
 				vDrawScoreboard();
-				vSetHighscore();
 				vDrawMedal();
+				vSetHighscore();
 				
 
 				if (tumEventGetMouseLeft() && vCheckReplay())
@@ -258,7 +256,7 @@ void vEnterCheats(void *pvParameters)
 						if (xTaskGetTickCount() - last_change >
 							debounceDelay)
 						{
-							score++;
+							player1.score++;
 							last_change = xTaskGetTickCount();
 						}
 					}
@@ -267,7 +265,7 @@ void vEnterCheats(void *pvParameters)
 						if (xTaskGetTickCount() - last_change >
 							debounceDelay)
 						{
-							score--;
+							player1.score--;
 							last_change = xTaskGetTickCount();
 						}
 					}
@@ -282,10 +280,7 @@ void vEnterCheats(void *pvParameters)
 // when playing cheat mode
 void vCheatMode(void *pvParameters)
 {
-	vDrawBird();
-	vDrawBase();
-	pipesInit();
-	birdInit();
+	vBirdReset();
 
 	TickType_t xLastFrameTime = xTaskGetTickCount();
 
@@ -309,7 +304,7 @@ void vCheatMode(void *pvParameters)
 				xLastFrameTime = xTaskGetTickCount();
 				vDrawQuit();
 
-				// quit cheat mode
+				//Quit cheat mode
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
 					if (buttons.buttons[KEYCODE(ESCAPE)])
@@ -343,24 +338,16 @@ void vViewScores(void *pvParameters)
 	}
 }
 
-// renew highest score
-void vSetHighscore(void)
-{
-	if (score >= highscore)
-	{
-		vDrawNewHigh();
-		highscore = score;
-	}
-}
+
 
 int createTasks(void)
 {
 	xTaskCreate(vTaskGame, "Game", mainGENERIC_STACK_SIZE * 20, NULL,
-				mainGENERIC_PRIORITY + 1, &Game);
+				mainGENERIC_PRIORITY + 4, &Game);
 	xTaskCreate(vTaskSettings, "DemoTask2", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &Settings);
 	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 20, NULL,
-				mainGENERIC_PRIORITY + 1, &SinglePlayer);
+				mainGENERIC_PRIORITY + 4, &SinglePlayer);
 	xTaskCreate(vTaskGameOver, "Game OVer", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &GameOver);
 	xTaskCreate(vCheatMode, "Cheat Mode", mainGENERIC_STACK_SIZE * 20, NULL,

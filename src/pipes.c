@@ -112,7 +112,7 @@ void vPipeMovement(void)
 }
 
 void vCheckCollision(void)
-{ // kinda messy but it works
+{ //Almost pixel perfect
 
     if (BIRD_X - 52 < getPipeX(pipe1) && getPipeX(pipe1) < BIRD_X + 50)
     {
@@ -151,26 +151,4 @@ void vCheckCollision(void)
     }
 }
 
-void countScore(void)
-{
 
-    if (bBirdAlive == true)
-    {
-
-        if (getPipeX(pipe1) == BIRD_X - 26)
-        {
-            tumSoundPlaySample(a4);
-            score++;
-        }
-        if (getPipeX(pipe2) == BIRD_X - 26)
-        {
-            tumSoundPlaySample(a4);
-            score++;
-        }
-        if (getPipeX(pipe3) == BIRD_X - 26)
-        {
-            tumSoundPlaySample(a4);
-            score++;
-        }
-    }
-}
