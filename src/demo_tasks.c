@@ -110,7 +110,7 @@ void vTaskSingle(void *pvParameters)
 				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
 									FETCH_EVENT_NO_GL_CHECK);
 				xGetButtonInput();
-
+				
 				vDrawBackground();
 				vDrawPipes();
 				vDrawScore();
@@ -143,11 +143,6 @@ void vTaskSingle(void *pvParameters)
 // before playing single mode
 void vTaskStartSingle(void *pvParameters)
 {
-
-	vDrawBird();
-	birdInit();
-	pipesInit();
-
 	while (1)
 	{
 		if (DrawSignal)
@@ -176,7 +171,7 @@ void vTaskGameOver(void *pvParameters)
 			{
 				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
 									FETCH_EVENT_NO_GL_CHECK);
-
+				
 				vDrawBackground();
 				vDrawPipes();
 				vDrawSpriteAnimations(xLastFrameTime);

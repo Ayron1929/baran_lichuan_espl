@@ -51,45 +51,66 @@ void vBirdStatus(void)
 }
 
 
-void vBirdMovement(void)
-{	
+void vBirdJump(void){
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
 
-	if (bBirdAlive == true) {
-		if(tumEventGetMouseLeft() == true){ // Gotta add delay
-
-			tumSoundPlaySample(a3); //wing sound
-			player1.velocity = 0.0f;
-			player1.velocity += -GRAVITY * 9.5f;
-			player1.y += player1.velocity;
-			
-
-		} else {
-			player1.velocity += GRAVITY;
-			player1.y += player1.velocity;
-		}
+		player1.velocity = 0.0f;
+		player1.velocity += -GRAVITY * 9.5f;
+		player1.y += player1.velocity;
+		xSemaphoreGive(player1.lock);
 	}
-	
-	//if collision occurs fall down
-	else{ 
-		if(player1.y <= SCREEN_HEIGHT - 185) {
-			
+}
+
+void vBirdFall(void){
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		player1.velocity += GRAVITY;
+		player1.y += player1.velocity;
+		xSemaphoreGive(player1.lock);
+	}
+}
+
+void vBirdFreeFall(void){
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		
+		if(player1.y <= SCREEN_HEIGHT - 185) 
+		{
 			player1.y += GRAVITY * 12;
 		}
 		else {
-			player1.y = SCREEN_HEIGHT - 175;
+			player1.y = SCREEN_HEIGHT - BASE_HEIGHT ;
 		}
+		xSemaphoreGive(player1.lock);
+	}
+}
+
+
+void vBirdMovement(void)
+{
+	if (bBirdAlive == true) {
+		if(buttons.buttons[KEYCODE(SPACE)]){ // Gotta add delay
+
+			tumSoundPlaySample(a3); //wing sound
+			vBirdJump();
+
+		} else {
+			vBirdFall();
+		}
+	}
+	//if collision occurs fall down
+	else{ 
+		vBirdFreeFall();
 	}
 	
 }
 
 void vBirdReset(void) {
 
-	player1.y = SCREEN_HEIGHT / 2;
-	player1.velocity = 0.0f;
+		player1.y = SCREEN_HEIGHT / 2;
+		player1.velocity = 0.0f;
 
-	score = 0;
+		score = 0;
 
-	bCollision = false;
-	pipesInit();
+		bCollision = false;
+		pipesInit();
 
 }
