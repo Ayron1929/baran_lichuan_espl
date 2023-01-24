@@ -95,16 +95,16 @@ void vPipeMovement(void)
         vPipesShift(p2);
         vPipesShift(p3);
 
-        if (getPipeX(pipe1) <= -52)
+        if (getPipeX(pipe1) <= -PIPE_WIDTH)
         {
             vPipesReset(p1);
         }
-        if (getPipeX(pipe2) <= -52)
+        if (getPipeX(pipe2) <= -PIPE_WIDTH)
         {
             vPipesReset(p2);
         }
 
-        if (getPipeX(pipe3) <= -52)
+        if (getPipeX(pipe3) <= -PIPE_WIDTH)
         {
             vPipesReset(p3);
         }
