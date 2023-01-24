@@ -1,7 +1,7 @@
 #ifndef __EMULATOR_CONFIG_H__
 #define __EMULATOR_CONFIG_H__
 
-#define WINDOW_TITLE "My FreeRTOS Emulator"
+#define WINDOW_TITLE "Flappy Bird Lichuan-Baran"
 #define SCREEN_WIDTH 432
 #define SCREEN_HEIGHT 768 
 // Relative to bin directory
