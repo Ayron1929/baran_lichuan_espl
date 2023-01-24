@@ -117,16 +117,16 @@ void vTaskSingle(void *pvParameters)
 				vCheckCollision();
 				vBirdStatus();
 				vBirdMovement();
+				vPipeMovement();
 				vDrawSpriteAnimations(xLastFrameTime);
 				xLastFrameTime = xTaskGetTickCount();
 				vDrawStop();
 
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
-
-					if (getBirdY() == (SCREEN_HEIGHT - 175))
+					//when bird touches the ground
+					if (getBirdY() == SCREEN_HEIGHT - 175)
 					{
-						// vTaskDelay(500);
 						states_set_state(3);
 					}
 
@@ -205,10 +205,6 @@ void vTaskGameOver(void *pvParameters)
 // when game stops
 void vPauseMode(void *pvParameters)
 {
-	int pause = 0;
-
-	TickType_t xLastFrameTime = xTaskGetTickCount();
-
 	while (1)
 	{
 		if (DrawSignal)
@@ -219,12 +215,9 @@ void vPauseMode(void *pvParameters)
 									FETCH_EVENT_NO_GL_CHECK);
 				xGetButtonInput();
 
-				vDrawBackground();
-				vDrawPipes();
-				vDrawScore();
-				vDrawSpriteAnimations(xLastFrameTime);
-				xLastFrameTime = xTaskGetTickCount();
-				vDrawStop();
+				//vDrawBackground();
+				//vDrawScore();
+				//vDrawStop();
 
 				// continue to play
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
@@ -311,6 +304,7 @@ void vCheatMode(void *pvParameters)
 				vDrawScore();
 				vBirdStatus();
 				vBirdMovement();
+				vPipeMovement();
 				vDrawSpriteAnimations(xLastFrameTime);
 				xLastFrameTime = xTaskGetTickCount();
 				vDrawQuit();
@@ -363,22 +357,22 @@ int createTasks(void)
 {
 	xTaskCreate(vTaskGame, "Game", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &Game);
-	xTaskCreate(vTaskSettings, "DemoTask2", mainGENERIC_STACK_SIZE * 2, NULL,
+	xTaskCreate(vTaskSettings, "DemoTask2", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &Settings);
-	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 2, NULL,
+	xTaskCreate(vTaskSingle, "SinglePlayer", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &SinglePlayer);
-	xTaskCreate(vTaskGameOver, "Game OVer", mainGENERIC_STACK_SIZE * 2, NULL,
+	xTaskCreate(vTaskGameOver, "Game OVer", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &GameOver);
-	xTaskCreate(vCheatMode, "Cheat Mode", mainGENERIC_STACK_SIZE * 2, NULL,
+	xTaskCreate(vCheatMode, "Cheat Mode", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &CheatMode);
-	xTaskCreate(vViewScores, "View Scores", mainGENERIC_STACK_SIZE * 2, NULL,
+	xTaskCreate(vViewScores, "View Scores", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &ViewScores);
-	xTaskCreate(vEnterCheats, "Start Cheats", mainGENERIC_STACK_SIZE * 2, NULL,
+	xTaskCreate(vEnterCheats, "Start Cheats", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &StartCheats);
-	xTaskCreate(vPauseMode, "Pause Mode", mainGENERIC_STACK_SIZE * 2, NULL,
+	xTaskCreate(vPauseMode, "Pause Mode", mainGENERIC_STACK_SIZE * 20, NULL,
 				mainGENERIC_PRIORITY + 1, &PauseMode);
 
-	xTaskCreate(vTaskStartSingle, "Start Single", mainGENERIC_STACK_SIZE * 2, NULL, mainGENERIC_PRIORITY + 1, &StartSingle);
+	xTaskCreate(vTaskStartSingle, "Start Single", mainGENERIC_STACK_SIZE * 20, NULL, mainGENERIC_PRIORITY + 1, &StartSingle);
 
 	vTaskSuspend(Game);
 	vTaskSuspend(Settings);

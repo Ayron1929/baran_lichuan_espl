@@ -518,62 +518,13 @@ void vDrawPipes(void)
 	tumDrawSetLoadedImageScale(pipe_1, 0.5);
 	tumDrawSetLoadedImageScale(pipe_2, 0.5);
 	tumDrawSetLoadedImageScale(pipe_3, 0.5);
-
-	// pipe 1
-	if (bBirdAlive == true)
-	{
-		checkDraw(tumDrawLoadedImage(pipe_1, getPipeX(pipe1), getPipeY(pipe1)),
+		
+	checkDraw(tumDrawLoadedImage(pipe_1, getPipeX(pipe1), getPipeY(pipe1)),
 				  __FUNCTION__);
-		pipe1.x -= 2;
-
-		if (getPipeX(pipe1) <= -52)
-		{
-			pipe1.x = SCREEN_WIDTH + 116;
-			pipe1.y = -350 + rand() % 310;
-		}
-	}
-	else
-	{ // stops moving when bird is dead
-		checkDraw(tumDrawLoadedImage(pipe_1, getPipeX(pipe1), getPipeY(pipe1)),
+	checkDraw(tumDrawLoadedImage(pipe_2, getPipeX(pipe2), getPipeY(pipe2)),
 				  __FUNCTION__);
-	}
-	// pipe 2
-	if (bBirdAlive == true)
-	{
-		checkDraw(tumDrawLoadedImage(pipe_2, getPipeX(pipe2), getPipeY(pipe2)),
+	checkDraw(tumDrawLoadedImage(pipe_3, getPipeX(pipe3), getPipeY(pipe3)),
 				  __FUNCTION__);
-		pipe2.x -= 2;
-
-		if (getPipeX(pipe2) <= -52)
-		{
-			pipe2.x = SCREEN_WIDTH + 116;
-			pipe2.y = -350 + rand() % 310;
-		}
-	}
-	else
-	{
-		checkDraw(tumDrawLoadedImage(pipe_2, getPipeX(pipe2), getPipeY(pipe2)),
-				  __FUNCTION__);
-	}
-
-	// pipe3
-	if (bBirdAlive == true)
-	{
-		checkDraw(tumDrawLoadedImage(pipe_3, getPipeX(pipe3), getPipeY(pipe3)),
-				  __FUNCTION__);
-		pipe3.x -= 2;
-
-		if (getPipeX(pipe3) <= -52)
-		{
-			pipe3.x = SCREEN_WIDTH + 116;
-			pipe3.y = -350 + rand() % 310;
-		}
-	}
-	else
-	{
-		checkDraw(tumDrawLoadedImage(pipe_3, getPipeX(pipe3), getPipeY(pipe3)),
-				  __FUNCTION__);
-	}
 }
 void vDrawScore(void)
 {

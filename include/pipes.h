@@ -14,9 +14,12 @@ extern struct pipes pipe2;
 extern struct pipes pipe3;
 
 extern int score;
+
 int getPipeX(struct pipes pipe);
 int getPipeY(struct pipes pipe);
-int vPipesShift(struct pipes pipe);
+void vPipesShift(struct pipes *ptr);
+void vPipesReset(struct pipes *ptr);
+void vPipeMovement(void);
 void pipesInit(void);
 void vCheckCollision(void);
 
