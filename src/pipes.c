@@ -78,11 +78,11 @@ void pipesInit(void)
     pipe1.y = -350 + rand() % 310;
 
     pipe2.lock = xSemaphoreCreateMutex();
-    pipe2.x = SCREEN_WIDTH + 200;
+    pipe2.x = SCREEN_WIDTH + PIPE_OFFSET;
     pipe2.y = -350 + rand() % 310;
 
     pipe3.lock = xSemaphoreCreateMutex();
-    pipe3.x = SCREEN_WIDTH + 400;
+    pipe3.x = SCREEN_WIDTH + PIPE_OFFSET*2;
     pipe3.y = -350 + rand() % 310;
 }
 
@@ -103,7 +103,6 @@ void vPipeMovement(void)
         {
             vPipesReset(p2);
         }
-
         if (getPipeX(pipe3) <= -PIPE_WIDTH)
         {
             vPipesReset(p3);
@@ -144,9 +143,9 @@ void vCheckCollision(void)
             bCollision = true;
         }
     }
-    if (getBirdY() > SCREEN_HEIGHT - BASE_HEIGHT || getBirdY() < 0)
+    if (getBirdY() >= SCREEN_HEIGHT - BASE_HEIGHT || getBirdY() < 0)
     {
-        tumSoundPlaySample(a5);
+        tumSoundPlaySample(b3);
         bCollision = true;
     }
 }

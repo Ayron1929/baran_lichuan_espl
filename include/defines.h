@@ -13,5 +13,6 @@
 #define PIPE_GAP 200
 #define BASE_HEIGHT 175
 #define BIRD_IMAGE_HEIGHT 34
+#define PIPE_OFFSET 200
 
 #endif // __DEFINES_H__
