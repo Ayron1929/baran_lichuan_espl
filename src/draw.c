@@ -1005,16 +1005,16 @@ void vDrawMedal(void){
 		tumDrawSetLoadedImageScale(bronze_medal_image, 3);
 	}
 
-	if(getScore() >= 10 && getScore() < 20) {
+	if(getScore() >= 1 && getScore() < 10) {
 		tumDrawLoadedImage(bronze_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
-	else if(getScore() >= 20 && getScore() < 30) {
+	else if(getScore() >= 10 && getScore() < 20) {
 		tumDrawLoadedImage(silver_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
-	else if(getScore() >= 30 && getScore() < 40) {
+	else if(getScore() >= 20 && getScore() < 30) {
 		tumDrawLoadedImage(gold_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
-	else if(getScore() >= 40) {
+	else if(getScore() >= 30) {
 		tumDrawLoadedImage(plat_medal_image, 100, SCREEN_HEIGHT / 2 - 120);
 	}
 }

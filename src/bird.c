@@ -105,7 +105,7 @@ void vBirdFreeFall(void){
 void vBirdMovement(void)
 {
 	if (bBirdAlive == true) {
-		if(buttons.buttons[KEYCODE(SPACE)]){ // Gotta add delay
+		if(tumEventGetMouseLeft()){ // Gotta add delay
 
 			tumSoundPlaySample(a3); //wing sound
 			vBirdJump();
