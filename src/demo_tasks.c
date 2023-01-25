@@ -228,7 +228,9 @@ void vPauseMode(void *pvParameters)
 }
 
 void vEnterCheats(void *pvParameters)
-{
+{	
+	pipesInit();
+	birdInit();
 	TickType_t last_change = xTaskGetTickCount();
 	int debounceDelay = 150; // 150 ms
 	while (1)
@@ -253,7 +255,7 @@ void vEnterCheats(void *pvParameters)
 						if (xTaskGetTickCount() - last_change >
 							debounceDelay)
 						{
-							score++;
+							incrementScore(b1, 1);
 							last_change = xTaskGetTickCount();
 						}
 					}
@@ -262,7 +264,7 @@ void vEnterCheats(void *pvParameters)
 						if (xTaskGetTickCount() - last_change >
 							debounceDelay)
 						{
-							score--;
+							incrementScore(b1, -1);
 							last_change = xTaskGetTickCount();
 						}
 					}
@@ -277,11 +279,6 @@ void vEnterCheats(void *pvParameters)
 // when playing cheat mode
 void vCheatMode(void *pvParameters)
 {
-	vDrawBird();
-	vDrawBase();
-	pipesInit();
-	birdInit();
-
 	TickType_t xLastFrameTime = xTaskGetTickCount();
 
 	while (1)

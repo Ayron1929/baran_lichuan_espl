@@ -22,6 +22,7 @@ bool bBirdAlive;
 bool bCollision; //true if collision occured
 
 struct bird player1;
+struct bird *b1 = &player1;
 
 int getBirdY(){
 	int ret = 0;
@@ -39,6 +40,13 @@ int getScore(){
 		xSemaphoreGive(player1.lock);
 	}
 	return ret;
+}
+
+void incrementScore(struct bird *ptr, int a){
+	if(xSemaphoreTake(ptr->lock, portMAX_DELAY) == pdTRUE){
+		ptr->score += a;
+		xSemaphoreGive(player1.lock);
+	}
 }
 
 void birdInit(void){
@@ -123,4 +131,28 @@ void vBirdReset(void) {
 		bCollision = false;
 		pipesInit();
 
+}
+
+void countScore(void)
+{
+
+    if (bBirdAlive == true)
+    {
+
+        if (getPipeX(pipe1) == BIRD_X - PIPE_WIDTH / 2)
+        {
+            tumSoundPlaySample(a4);
+            incrementScore(b1, 1);
+        }
+        if (getPipeX(pipe2) == BIRD_X - PIPE_WIDTH / 2)
+        {
+            tumSoundPlaySample(a4);
+            incrementScore(b1, 1);
+        }
+        if (getPipeX(pipe3) == BIRD_X - PIPE_WIDTH / 2)
+        {
+            tumSoundPlaySample(a4);
+            incrementScore(b1, 1);
+        }
+    }
 }

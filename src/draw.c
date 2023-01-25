@@ -236,7 +236,7 @@ void vDrawCheatMode(void)
 {
 	GetSize();
 
-	sprintf(scores, "Start Scores: %d", score);
+	sprintf(scores, "Start Scores: %d", getScore());
 
 	checkDraw(tumDrawText((char *)scores, screen_mid - scores_width / 2, screen_height_mid - scores_height / 2, Maroon), __FUNCTION__);
 	checkDraw(tumDrawText(up_down, screen_mid - updown_width / 2, screen_height_mid - scores_height / 2 + 100, Maroon), __FUNCTION__);

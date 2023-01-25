@@ -23,6 +23,6 @@ void vPipeMovement(void);
 void pipesInit(void);
 void vCheckCollision(void);
 
-void countScore(void);
+
 
 #endif
