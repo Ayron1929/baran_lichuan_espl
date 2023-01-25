@@ -341,10 +341,10 @@ void vViewScores(void *pvParameters)
 // renew highest score
 void vSetHighscore(void)
 {
-	if (score >= highscore)
+	if (getScore() >= highscore)
 	{
 		vDrawNewHigh();
-		highscore = score;
+		highscore = getScore();
 	}
 }
 

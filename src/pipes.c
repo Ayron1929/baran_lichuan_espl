@@ -156,17 +156,17 @@ void countScore(void)
         if (getPipeX(pipe1) == BIRD_X - PIPE_WIDTH / 2)
         {
             tumSoundPlaySample(a4);
-            score++;
+            player1.score++;
         }
         if (getPipeX(pipe2) == BIRD_X - PIPE_WIDTH / 2)
         {
             tumSoundPlaySample(a4);
-            score++;
+            player1.score++;
         }
         if (getPipeX(pipe3) == BIRD_X - PIPE_WIDTH / 2)
         {
             tumSoundPlaySample(a4);
-            score++;
+            player1.score++;
         }
     }
 }

@@ -32,11 +32,21 @@ int getBirdY(){
 	return ret;
 }
 
+int getScore(){
+	int ret = 0;
+	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
+		ret = player1.score;
+		xSemaphoreGive(player1.lock);
+	}
+	return ret;
+}
+
 void birdInit(void){
 
 	player1.lock = xSemaphoreCreateMutex();
 	player1.y = SCREEN_HEIGHT / 2;
 	player1.velocity = 0.0f;
+	player1.score = 0;
 
 }
 
@@ -108,7 +118,7 @@ void vBirdReset(void) {
 		player1.y = SCREEN_HEIGHT / 2;
 		player1.velocity = 0.0f;
 
-		score = 0;
+		player1.score = 0;
 
 		bCollision = false;
 		pipesInit();
