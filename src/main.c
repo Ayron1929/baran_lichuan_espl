@@ -18,7 +18,6 @@
 #include "demo_tasks.h"
 #include "buttons.h"
 #include "defines.h"
-#include "AsyncIO.h"
 #include "sm.h"
 #include "game_menu.h"
 #include "FreeRTOS.h"

@@ -9,6 +9,7 @@ struct bird
 	int y;
 	float velocity;
 	int score;
+
 };
 
 extern struct bird player1;

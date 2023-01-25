@@ -9,8 +9,6 @@
 #include "main.h"
 #include "demo_tasks.h"
 #include "draw.h"
-#include "async_message_queues.h"
-#include "async_sockets.h"
 #include "buttons.h"
 #include "bird.h"
 #include "pipes.h"
@@ -33,6 +31,7 @@ int getBirdY(){
 	return ret;
 }
 
+
 int getScore(){
 	int ret = 0;
 	if(xSemaphoreTake(player1.lock, portMAX_DELAY) == pdTRUE){
@@ -41,6 +40,7 @@ int getScore(){
 	}
 	return ret;
 }
+
 
 void incrementScore(struct bird *ptr, int a){
 	if(xSemaphoreTake(ptr->lock, portMAX_DELAY) == pdTRUE){

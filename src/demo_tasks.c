@@ -9,8 +9,6 @@
 #include "main.h"
 #include "demo_tasks.h"
 #include "draw.h"
-#include "async_message_queues.h"
-#include "async_sockets.h"
 #include "buttons.h"
 #include "sm.h"
 #include "buttons.h"
@@ -125,7 +123,7 @@ void vTaskSingle(void *pvParameters)
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)
 				{
 					//when bird touches the ground
-					if (getBirdY() == SCREEN_HEIGHT - 175)
+					if (getBirdY() == SCREEN_HEIGHT - BASE_HEIGHT)
 					{
 						states_set_state(3);
 					}
@@ -209,10 +207,6 @@ void vPauseMode(void *pvParameters)
 				tumEventFetchEvents(FETCH_EVENT_NONBLOCK |
 									FETCH_EVENT_NO_GL_CHECK);
 				xGetButtonInput();
-
-				//vDrawBackground();
-				//vDrawScore();
-				//vDrawStop();
 
 				// continue to play
 				if (xSemaphoreTake(buttons.lock, 0) == pdTRUE)

@@ -9,8 +9,6 @@
 #include "main.h"
 #include "demo_tasks.h"
 #include "draw.h"
-#include "async_message_queues.h"
-#include "async_sockets.h"
 #include "buttons.h"
 #include "bird.h"
 #include "pipes.h"

@@ -4,6 +4,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+extern int highscore;
+
 extern TaskHandle_t Settings;
 extern TaskHandle_t DemoSendTask;
 extern TaskHandle_t Game;
@@ -14,8 +16,6 @@ extern TaskHandle_t ViewScores;
 extern TaskHandle_t StartSingle;
 extern TaskHandle_t StartCheats;
 extern TaskHandle_t PauseMode;
-
-extern int highscore;
 
 void vStatesTask(void *pvParameters);
 void vTaskGame(void *pvParameters);

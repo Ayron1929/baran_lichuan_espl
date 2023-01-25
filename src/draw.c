@@ -10,8 +10,6 @@
 #include "main.h"
 #include "demo_tasks.h"
 #include "draw.h"
-#include "async_message_queues.h"
-#include "async_sockets.h"
 #include "buttons.h"
 #include "sm.h"
 #include "bird.h"
@@ -92,7 +90,6 @@ sequence_handle_t forward_sequence = NULL;
 sequence_handle_t reverse_sequence = NULL;
 sequence_handle_t base_forward_sequence = NULL;
 
-int score = 0;
 int menu_width;
 int menu_height;
 int mouse_x, mouse_y;
